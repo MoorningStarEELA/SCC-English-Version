@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCC - Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style/resultados.css">
+    <link rel="icon" href="./style/sources/olaColor.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+    <div id="tooltip" class="tooltip">
+    <div id="tooltip-content"></div>
+</div>
+    <div class="container">
+        <div class="logo-container export-pdf">
+    <div class="logo-fallback"></div>
+    </div>
+        
+        <div class="header">
+            <h1 class="title">Calculation Results</h1>
+        </div>
+        
+        <div class="content">
+            <div class="visual-container">
+                <div class="chart-container">
+                    <canvas id="grafica"></canvas>
+                </div>
+                
+                <div class="new-tables-container">
+                    <div class="new-table-title">Datos</div>
+                    <table class="results-table">
+                        <tbody>
+                            <tr>
+                                <td>Minutes per Model Chanhe per day</td>
+                                <td id="ResultadoModelo">-</td>
+                            </tr>
+                            <tr>
+                                <td>Performance</td>
+                                <td id="ResultadoProductividad">-</td>
+                            </tr>
+                            <tr>
+                                <td>Npi Minutes Per Day</td>
+                                <td id="ResultadoNPI">-</td>
+                            </tr>
+                            <tr>
+                                <td>YIELD</td>
+                                <td id="ResultadoYield">-</td>
+                            </tr>
+                            <tr>
+                                <td>OEE</td>
+                                <td id="ResultadoOEE">-</td>
+                            </tr>
+                            <tr>
+                                <td>Machines Needed</td>
+                                <td id="ResultadoMaquinas">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="new-tables-container">
+    <div class="new-table-title">Top 10 Most Used Models per Month</div>
+    <div class="table-container">
+        
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Model</th>
+                    <th>Utilization</th>
+                </tr>
+            </thead>
+            <tbody id="top10TableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+            <div class="actions">
+                <button class="btn btn-primary" id="generarPDF">
+                    <i class="fas fa-download"></i> Download Report 
+                </button>
+                <button class="btn" id="regresarBtn">
+                    <i class="fas fa-arrow-left"></i> Home
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Smart Capacity Calculator &copy; 2025</p>
+        </div>
+    </div>
+
+    <script src="./script/db.js"></script>
+    <script src="./script/resultados.js"></script>
+</body>
+</html>
