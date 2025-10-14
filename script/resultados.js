@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!modelo || uphReal <= 0) return;
 
                 // Buscar la fila correspondiente en demandaData para este modelo
-                const demandaFila = demandaData.find(d => d.Modelo === modelo);
+                const demandaFila = demandaData.find(d => d.Part === modelo);
                 if (!demandaFila) return;
 
                 // Obtener la demanda de este modelo para el mes actual
