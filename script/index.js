@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let capacidadData = [];
 
             // Procesar Demanda
-            if (workbook.SheetNames.includes('Demanda')) {
-                demandaData = window.processSheet(workbook.Sheets['Demanda'], null, 1, 0);
+            if (workbook.SheetNames.includes('Demand')) {
+                demandaData = window.processSheet(workbook.Sheets['Demand'], null, 1, 0);
                 console.log('Datos de Demanda extraídos:', demandaData); // Nuevo log
 
                 let demandaPorMes = {};
                 demandaData.forEach(row => {
                     const mes = row['Mes'];
-                    const demanda = parseFloat(row['Demanda']);
+                    const demanda = parseFloat(row['Demand']);
                     if(mes && !isNaN(demanda)){
                         demandaPorMes[mes] = (demandaPorMes[mes] || 0) + demanda;
                     }
@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Procesar Capacidad
-            if (workbook.SheetNames.includes('Informacion de los modelos')) {
+            if (workbook.SheetNames.includes('Model Information')) {
                 // MODIFICACIÓN CRUCIAL: Cambiado a [] para extraer TODAS las columnas
                 // Esto es vital para asegurar que todos los datos necesarios para los cálculos
                 // sean extraídos correctamente, sin importar el orden o si hay columnas adicionales.
-                capacidadData = window.processSheet(workbook.Sheets['Informacion de los modelos'], [], 1, 0);
+                capacidadData = window.processSheet(workbook.Sheets['Model Information'], [], 1, 0);
                 console.log('Datos ANTES de cálculos (Capacidad):', capacidadData); // Nuevo log
 
                 const totalModelos = capacidadData [0]['Total Modelos: '];
@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 capacidadData.forEach(row => {
                     // Corregir nombres de columnas y conversión numérica
-                    const largoSeparacionIn = parseFloat(String(row['Largo Pallet (In)']).trim()) || 0;
-                    const velocidadConveyorFtMin = parseFloat(String(row['Velocidad de Conveyor (ft/min)']).trim()) || 0;
+                    const largoSeparacionIn = parseFloat(String(row['Pallet Length (In)']).trim()) || 0;
+                    const velocidadConveyorFtMin = parseFloat(String(row['Conveyor Speed (ft/min)']).trim()) || 0;
                     const arrayValue = parseFloat(String(row['Array']).trim()) || 0;
-                    const uphReal = parseFloat(String(row['UPH Real']).trim()) || 0;
+                    const uphReal = parseFloat(String(row['Actual UPH']).trim()) || 0;
 
                     
                     // Cálculos corregidos
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         resultadosDiv.innerHTML = ''; // Limpiar resultados anteriores
         if (capacidadData.length === 0) {
-            resultadosDiv.innerHTML = '<p>No hay datos de capacidad para mostrar.</p>';
+            resultadosDiv.innerHTML = '<p>No capacity data tp display</p>';
             return;
         }
 

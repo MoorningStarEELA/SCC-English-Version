@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const capacidadData = await window.getAllDataFromIndexedDB(window.STORE_INFORMACION);
 
         function obtenerMeses() {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const meses = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const fechaActual = new Date();
             const mesActual = fechaActual.getMonth();
             const mesesDinamicos = [];
@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const meses = obtenerMeses();
             const currentYear = new Date().getFullYear();
             const mesIndexMap = {
-                'Enero': 0, 'Febrero': 1, 'Marzo': 2, 'Abril': 3, 'Mayo': 4, 'Junio': 5,
-                'Julio': 6, 'Agosto': 7, 'Septiembre': 8, 'Octubre': 9, 'Noviembre': 10, 'Diciembre': 11
+                'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+                'July': 6, 'August': 7, 'Septiember': 8, 'October': 9, 'November': 10, 'December': 11
             };
 
             // --- Top 10 calculado para el mes actual ---
@@ -109,8 +109,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // --- calculo por modelo (todo en minutos) ---
             capacidadData.forEach(fila => {
                 
-                const modelo = fila['Ensamble (Número)'];
-                const uphReal = parseFloat(fila['UPH Real']) || 0; // UPH = unidades por hora
+                const modelo = fila['Assembly (Number)'];
+                const uphReal = parseFloat(fila['Actual UPH']) || 0; // UPH = unidades por hora
 
                 if (!modelo || uphReal <= 0) return;
 
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const mapaModelos = {};
             capacidadData.forEach(fila => {
-                mapaModelos[fila['Ensamble (Número)']] = fila;
+                mapaModelos[fila['Assembly (Number)']] = fila;
             });
 
             // Llenar la tabla
@@ -180,10 +180,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         const tooltipHtml = `
                             <strong>Model: ${modelo}</strong><br>
-                            Pallet Length: ${modeloData['Largo Pallet (In)'] || 'N/A'}<br>
-                            Conveyor Speed: ${modeloData['Velocidad de Conveyor (ft/min)'] || 'N/A'}<br>
+                            Pallet Length: ${modeloData['Pallet Length (In)'] || 'N/A'}<br>
+                            Conveyor Speed: ${modeloData['Conveyor Speed (ft/min)'] || 'N/A'}<br>
                             Array: ${modeloData['Array'] || 'N/A'}<br>
-                            Actual UPH: ${modeloData['UPH Real'].toFixed(2) || 'N/A'} <br>
+                            Actual UPH: ${modeloData['Actual UPH'].toFixed(2) || 'N/A'} <br>
                             UPH 100%: ${modeloData['UPH 100%'].toFixed(2) || 'N/A'}`;
                         tooltipContent.innerHTML = tooltipHtml;
                     }
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (demandaDelMes > 0 && daysInMonth > 0 && variability > 0) {
                     capacidadData.forEach(filaCapacidad => {
-                        const uphReal = parseFloat(filaCapacidad['UPH Real']) || 0;
+                        const uphReal = parseFloat(filaCapacidad['Actual UPH']) || 0;
                         const uph100 = parseFloat(filaCapacidad['UPH 100%']) || 0;
                         const Sabado3 = 1862;
                         const horasDisponibles = (variability - Sabado3) * 60;
@@ -265,14 +265,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Equipos necesarios Real',
+                            label: 'Required equipment Real',
                             data: nuevoCalculoPorMes,
                             backgroundColor: 'rgba(255, 99, 132, 0.5)',
                             borderColor: 'rgba(255, 99, 132, 1)',
                             borderWidth: 1
                         },
                         {
-                            label: 'Equipos Necesarios al 100%',
+                            label: 'Required equipment 100%',
                             data: calculo100PorMes,
                             backgroundColor: 'rgba(75, 192, 192, 0.5)',
                             borderColor: 'rgba(75, 192, 192, 1)',

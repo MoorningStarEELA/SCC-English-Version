@@ -1,8 +1,8 @@
 // --- CONFIGURACIÓN DE INDEXEDDB ---
 const DB_NAME = 'SCC_DataDB';
 const DB_VERSION = 1;
-const STORE_DEMANDA = 'Demanda';
-const STORE_INFORMACION = 'Informacion de los modelos'; 
+const STORE_DEMANDA = 'Demand';
+const STORE_INFORMACION = 'Model Information'; 
 const STORE_FORM_ADICIONAL = 'formularioAdicional';
 
 // Abre la base de datos
