@@ -231,7 +231,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const uphReal = parseFloat(filaCapacidad['Actual UPH']) || 0;
                         const uph100 = parseFloat(filaCapacidad['UPH 100%']) || 0;
                         const Sabado3 = 1862;
-                        const horasDisponibles = (variability - Sabado3) * 60;
+                         let horasDisponibles;
+                            if (variability > 1000) {
+                                // Ya está en minutos
+                                horasDisponibles = variability - Sabado3;
+                            } else {
+                                // Está en horas → conviértelo a minutos
+                                horasDisponibles = (variability - Sabado3) * 60;
+                            }
 
                         if (uphReal > 0) {
                             const resultado = (demandaDelMes / uphReal) * 60;
