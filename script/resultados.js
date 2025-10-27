@@ -203,109 +203,109 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.showTooltip = showTooltip;
                 window.hideTooltip = hideTooltip;
             // --- Lógica de la gráfica ---
-           // --- Lógica de la gráfica CORREGIDA ---
-const ctx = document.getElementById('grafica').getContext('2d');
-const sumaPorMesReal = {};
-const sumaPorMesReal100 = {};
+           
+                        const ctx = document.getElementById('grafica').getContext('2d');
+                        const sumaPorMesReal = {};
+                        const sumaPorMesReal100 = {};
 
-meses.forEach(mes => {
-    sumaPorMesReal[mes] = 0;
-    sumaPorMesReal100[mes] = 0;
-});
+                        meses.forEach(mes => {
+                            sumaPorMesReal[mes] = 0;
+                            sumaPorMesReal100[mes] = 0;
+                        });
 
-meses.forEach(mesActualNombre => {
-    // --- Calcular demanda total del mes ---
-    let demandaDelMes = 0;
-    demandaData.forEach(row => {
-        const valor = parseFloat((row[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
-        if (!isNaN(valor)) demandaDelMes += valor;
-    });
+                        meses.forEach(mesActualNombre => {
+                            // --- Calcular demanda total del mes ---
+                            let demandaDelMes = 0;
+                            demandaData.forEach(row => {
+                                const valor = parseFloat((row[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
+                                if (!isNaN(valor)) demandaDelMes += valor;
+                            });
 
-    const monthIndex = mesIndexMap[mesActualNombre];
-    const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
-    const Sabado3 = 1862;
-    const minutosDisponiblesPorDia = (variability - Sabado3);
-    const minutosDisponiblesPorMes = minutosDisponiblesPorDia;
+                            const monthIndex = mesIndexMap[mesActualNombre];
+                            const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+                            const Sabado3 = 1862;
+                            const minutosDisponiblesPorDia = (variability - Sabado3);
+                            const minutosDisponiblesPorMes = minutosDisponiblesPorDia;
 
-    const modelosMaquinasReal = {};
-    const modelosMaquinas100 = {};
+                            const modelosMaquinasReal = {};
+                            const modelosMaquinas100 = {};
 
-    capacidadData.forEach(fila => {
-        const modelo = fila['Assembly (Number)'];
-        const uphReal = parseFloat(fila['Actual UPH']) || 0;
-        const uph100 = parseFloat(fila['UPH 100%']) || 0;
+                            capacidadData.forEach(fila => {
+                                const modelo = fila['Assembly (Number)'];
+                                const uphReal = parseFloat(fila['Actual UPH']) || 0;
+                                const uph100 = parseFloat(fila['UPH 100%']) || 0;
 
-        if (!modelo) return;
+                                if (!modelo) return;
 
-        const demandaFila = demandaData.find(d => d.Part === modelo);
-        if (!demandaFila) return;
+                                const demandaFila = demandaData.find(d => d.Part === modelo);
+                                if (!demandaFila) return;
 
-        const demandaPorModelo = parseFloat((demandaFila[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
-        if (isNaN(demandaPorModelo) || demandaPorModelo <= 0) return;
+                                const demandaPorModelo = parseFloat((demandaFila[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
+                                if (isNaN(demandaPorModelo) || demandaPorModelo <= 0) return;
 
-        if (uphReal > 0) {
-            const minutosNecesarios = (demandaPorModelo / uphReal) * 60;
-            const utilizacion = minutosNecesarios / minutosDisponiblesPorMes;
-            modelosMaquinasReal[modelo] = utilizacion;
-        }
+                                if (uphReal > 0) {
+                                    const minutosNecesarios = (demandaPorModelo / uphReal) * 60;
+                                    const utilizacion = minutosNecesarios / minutosDisponiblesPorMes;
+                                    modelosMaquinasReal[modelo] = utilizacion;
+                                }
 
-        if (uph100 > 0) {
-            const minutosNecesarios100 = (demandaPorModelo / uph100) * 60;
-            const utilizacion100 = minutosNecesarios100 / minutosDisponiblesPorMes;
-            modelosMaquinas100[modelo] = utilizacion100;
-        }
-    });
+                                if (uph100 > 0) {
+                                    const minutosNecesarios100 = (demandaPorModelo / uph100) * 60;
+                                    const utilizacion100 = minutosNecesarios100 / minutosDisponiblesPorMes;
+                                    modelosMaquinas100[modelo] = utilizacion100;
+                                }
+                            });
 
-    // --- sumar la utilización total de todos los modelos ---
-    const sumaUtilizacionReal = Object.values(modelosMaquinasReal).reduce((a, b) => a + b, 0);
-    const sumaUtilizacion100 = Object.values(modelosMaquinas100).reduce((a, b) => a + b, 0);
+                            // --- sumar la utilización total de todos los modelos ---
+                            const sumaUtilizacionReal = Object.values(modelosMaquinasReal).reduce((a, b) => a + b, 0);
+                            const sumaUtilizacion100 = Object.values(modelosMaquinas100).reduce((a, b) => a + b, 0);
 
-    sumaPorMesReal[mesActualNombre] = sumaUtilizacionReal;
-    sumaPorMesReal100[mesActualNombre] = sumaUtilizacion100;
+                            sumaPorMesReal[mesActualNombre] = sumaUtilizacionReal;
+                            sumaPorMesReal100[mesActualNombre] = sumaUtilizacion100;
 
-    console.log(`📊 ${mesActualNombre} → Real: ${sumaUtilizacionReal.toFixed(3)}, 100%: ${sumaUtilizacion100.toFixed(3)}`);
-});
+                            console.log(`📊 ${mesActualNombre} → Real: ${sumaUtilizacionReal.toFixed(3)}, 100%: ${sumaUtilizacion100.toFixed(3)}`);
+                        });
 
-// --- preparar datos para Chart.js ---
-const labels = meses;
-const datosReal = meses.map(mes => sumaPorMesReal[mes]);
-const datos100 = meses.map(mes => sumaPorMesReal100[mes]);
+                        // --- preparar datos para Chart.js ---
+                        const labels = meses;
+                        const datosReal = meses.map(mes => sumaPorMesReal[mes]);
+                        const datos100 = meses.map(mes => sumaPorMesReal100[mes]);
 
-const maxMaquinasNecesarias = Math.ceil(Math.max(...datosReal));
-resultadoMaquinas.textContent = maxMaquinasNecesarias;
+                        const maxMaquinasNecesarias = Math.ceil(Math.max(...datosReal));
+                        resultadoMaquinas.textContent = maxMaquinasNecesarias;
 
-// --- renderizar gráfica ---
-if (myChartInstance) myChartInstance.destroy();
+                        // --- renderizar gráfica ---
+                        if (myChartInstance) myChartInstance.destroy();
 
-myChartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Required equipment Real',
-                data: datosReal,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Required equipment 100%',
-                data: datos100,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: { beginAtZero: true },
-            x: { title: { display: true, text: 'Mes' } }
-        }
-    }
-});
+                        myChartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        label: 'Required equipment Real',
+                                        data: datosReal,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Required equipment 100%',
+                                        data: datos100,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: { beginAtZero: true },
+                                    x: { title: { display: true, text: 'Mes' } }
+                                }
+                            }
+                        });
 
         } else {
             console.warn("Datos de demanda o capacidad no encontrados.");
