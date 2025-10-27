@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const utilizacion = minutosNecesarios / minutosDisponiblesPorMes;
 
                 modelosMaquinas[modelo] = utilizacion;
+                console.log('Utilizacion Por modelo:', modelosMaquinas)
 
                 // Log para verificar
                 console.table(`Modelo: ${modelo}, Demanda: ${demandaPorModelo}, Minutos necesarios: ${minutosNecesarios}, Utilización: ${utilizacion}`);
@@ -202,99 +203,110 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.showTooltip = showTooltip;
                 window.hideTooltip = hideTooltip;
             // --- Lógica de la gráfica ---
-            const ctx = document.getElementById('grafica').getContext('2d');
-            const sumaPorMes = {};
-            meses.forEach(mes => sumaPorMes[mes] = 0);
-            
-            demandaData.forEach(row => {
-                meses.forEach(mes => {
-                    const valor = parseFloat((row[mes] || '0').toString().replace(/,/g, '').trim());
-                    if (!isNaN(valor)) {
-                        sumaPorMes[mes] += valor;
-                    }
-                });
-            });
+           // --- Lógica de la gráfica CORREGIDA ---
+const ctx = document.getElementById('grafica').getContext('2d');
+const sumaPorMesReal = {};
+const sumaPorMesReal100 = {};
 
-            const calculo100PorMes = [];
-            const nuevoCalculoPorMes = [];
+meses.forEach(mes => {
+    sumaPorMesReal[mes] = 0;
+    sumaPorMesReal100[mes] = 0;
+});
 
-            meses.forEach(mes => {
-                const demandaDelMes = sumaPorMes[mes];
-                let sumaTotal100PorMes = 0;
-                let sumaTotalPorMes = 0;
-                
-                const monthIndex = mesIndexMap[mes];
-                const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+meses.forEach(mesActualNombre => {
+    // --- Calcular demanda total del mes ---
+    let demandaDelMes = 0;
+    demandaData.forEach(row => {
+        const valor = parseFloat((row[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
+        if (!isNaN(valor)) demandaDelMes += valor;
+    });
 
-                if (demandaDelMes > 0 && daysInMonth > 0 && variability > 0) {
-                    capacidadData.forEach(filaCapacidad => {
-                        const uphReal = parseFloat(filaCapacidad['Actual UPH']) || 0;
-                        const uph100 = parseFloat(filaCapacidad['UPH 100%']) || 0;
-                        const Sabado3 = 1862;
-                         let horasDisponibles;
-                            if (variability > 1000) {
-                                // Ya está en minutos
-                                horasDisponibles = variability - Sabado3;
-                            } else {
-                                // Está en horas → conviértelo a minutos
-                                horasDisponibles = (variability - Sabado3) * 60;
-                            }
+    const monthIndex = mesIndexMap[mesActualNombre];
+    const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+    const Sabado3 = 1862;
+    const minutosDisponiblesPorDia = (variability - Sabado3);
+    const minutosDisponiblesPorMes = minutosDisponiblesPorDia;
 
-                        if (uphReal > 0) {
-                            const resultado = (demandaDelMes / uphReal) * 60;
-                            const horasnecesarias = resultado / horasDisponibles;
-                            const Maquinastotales = horasnecesarias / daysInMonth;
-                            sumaTotalPorMes += Maquinastotales;
-                        }
-                        
-                        if (uph100 > 0) {
-                            const resultado100 = (demandaDelMes / uph100) * 60;
-                            const horasnecesarias100 = resultado100 / horasDisponibles;
-                            const Maquinastotales100 = horasnecesarias100 / daysInMonth;
-                            sumaTotal100PorMes += Maquinastotales100;
-                        }
-                    });
-                }
+    const modelosMaquinasReal = {};
+    const modelosMaquinas100 = {};
 
-                nuevoCalculoPorMes.push(sumaTotalPorMes);
-                calculo100PorMes.push(sumaTotal100PorMes);
-            });
+    capacidadData.forEach(fila => {
+        const modelo = fila['Assembly (Number)'];
+        const uphReal = parseFloat(fila['Actual UPH']) || 0;
+        const uph100 = parseFloat(fila['UPH 100%']) || 0;
 
-            const labels = meses;
-            const maxMaquinasNecesarias = Math.ceil(Math.max(...nuevoCalculoPorMes)); 
-            resultadoMaquinas.textContent = maxMaquinasNecesarias;
+        if (!modelo) return;
 
-            if (myChartInstance) myChartInstance.destroy();
+        const demandaFila = demandaData.find(d => d.Part === modelo);
+        if (!demandaFila) return;
 
-            myChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Required equipment Real',
-                            data: nuevoCalculoPorMes,
-                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Required equipment 100%',
-                            data: calculo100PorMes,
-                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true },
-                        x: { title: { display: true, text: 'Mes' } }
-                    }
-                }
-            });
+        const demandaPorModelo = parseFloat((demandaFila[mesActualNombre] || '0').toString().replace(/,/g, '').trim());
+        if (isNaN(demandaPorModelo) || demandaPorModelo <= 0) return;
+
+        if (uphReal > 0) {
+            const minutosNecesarios = (demandaPorModelo / uphReal) * 60;
+            const utilizacion = minutosNecesarios / minutosDisponiblesPorMes;
+            modelosMaquinasReal[modelo] = utilizacion;
+        }
+
+        if (uph100 > 0) {
+            const minutosNecesarios100 = (demandaPorModelo / uph100) * 60;
+            const utilizacion100 = minutosNecesarios100 / minutosDisponiblesPorMes;
+            modelosMaquinas100[modelo] = utilizacion100;
+        }
+    });
+
+    // --- sumar la utilización total de todos los modelos ---
+    const sumaUtilizacionReal = Object.values(modelosMaquinasReal).reduce((a, b) => a + b, 0);
+    const sumaUtilizacion100 = Object.values(modelosMaquinas100).reduce((a, b) => a + b, 0);
+
+    sumaPorMesReal[mesActualNombre] = sumaUtilizacionReal;
+    sumaPorMesReal100[mesActualNombre] = sumaUtilizacion100;
+
+    console.log(`📊 ${mesActualNombre} → Real: ${sumaUtilizacionReal.toFixed(3)}, 100%: ${sumaUtilizacion100.toFixed(3)}`);
+});
+
+// --- preparar datos para Chart.js ---
+const labels = meses;
+const datosReal = meses.map(mes => sumaPorMesReal[mes]);
+const datos100 = meses.map(mes => sumaPorMesReal100[mes]);
+
+const maxMaquinasNecesarias = Math.ceil(Math.max(...datosReal));
+resultadoMaquinas.textContent = maxMaquinasNecesarias;
+
+// --- renderizar gráfica ---
+if (myChartInstance) myChartInstance.destroy();
+
+myChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Required equipment Real',
+                data: datosReal,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Required equipment 100%',
+                data: datos100,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: { beginAtZero: true },
+            x: { title: { display: true, text: 'Mes' } }
+        }
+    }
+});
+
         } else {
             console.warn("Datos de demanda o capacidad no encontrados.");
             resultadoMaquinas.textContent = 'N/A';
