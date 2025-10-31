@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let position = margin;
 
             doc.setFontSize(24);
-            doc.text("Reporte SCC", pdfWidth / 2, 40, { align: 'center' });
+            doc.text("Report SCC", pdfWidth / 2, 40, { align: 'center' });
             position = 60;
 
             doc.addImage(imgData, 'JPEG', margin, position, imgDisplayWidth, imgDisplayHeight);
