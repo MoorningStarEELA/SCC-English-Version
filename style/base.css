@@ -18,7 +18,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1a2a6c, #047af0);
+    background: linear-gradient(135deg,#047af0, #1a2a6c );
     color: var(--light);
     min-height: 100vh;
     display: flex;
