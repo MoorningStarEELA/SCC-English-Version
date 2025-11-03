@@ -1,124 +1,36 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCC - Home </title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./style/base.css">
-    <link rel="stylesheet" href="./style/index.css">
-    <link rel="icon" href="./style/sources/olaColor.png">
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-     <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap'><link rel="stylesheet" href="./style/menu.css">
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Raleway:200'><link rel="stylesheet" href="./style/style.css">
+
 </head>
+<!-- Funcion para navegar entre aplicaciones -->
+<script>
+  function redirigir(url){
+    console.log("Redirigiendo a " + url);
+    window.location.href = url;
+  }
+</script>
 <body>
-    <nav class="sidebar close">
-  <header>
-    <div class="image-text">
-      <span class="image">
-        <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="">
-      </span>
+<!-- partial:index.partial.html -->
+<div class="all">
+<div class="lefter" onclick="redirigir('Inicio.html')">
+  <div class="text">SCC</div>
+  
+</div>
 
-      <div class="text logo-text">
-        <span class="name">
-            <img src="./style/sources/logo2.png" alt="" class="logo-img-small" width="100%" height="100%" >
-        </span>
-        <span class="profession">SSC</span>
-      </div>
-    </div>
-
-    <i class='bx bx-chevron-right toggle'></i>
-  </header>
-
-  <div class="menu-bar">
-    <div class="menu">
-
-      <li class="search-box">
-        <i class='bx bx-search icon'></i>
-        <input type="text" placeholder="Search...">
-      </li>
-
-      <ul class="menu-links">
-        <li class="nav-link">
-          <a href="#">
-            <i class='bx bx-home-alt icon'></i>
-            <span class="text nav-text">Home</span>
-          </a>
-        </li>
-
-        <li class="nav-link">
-          <a href="#">
-            <i class='bx bx-bar-chart-alt-2 icon'></i>
-            <span class="text nav-text">Revenue</span>
-          </a>
-        </li>
-
-        <li class="nav-link">
-          <a href="#">
-            <i class='bx bx-bell icon'></i>
-            <span class="text nav-text">Notifications</span>
-          </a>
-        </li>
-
-        <li class="nav-link">
-          <a href="#">
-            <i class='bx bx-pie-chart-alt icon'></i>
-            <span class="text nav-text">Analytics</span>
-          </a>
-        </li>
-
-
-      </ul>
-    </div>
+<div class="center">
+  <div class="explainer"><span>Welcome User</span></div>
+  <div class="text">Select an option</div>
   </div>
-</nav>
 
+<div class="righter">
+  <div class="text">New App</div>
+</div>
+</div>
 
-    <div class="container">
-        <div class="logo-container">
-            <img src="./style/sources/logo.png" alt="Smart Capacity Calculator" class="logo-img">
-        </div>
-
-        <div class="header">
-            <h1 class="title">Welcome - Smart Capacity Calculator </h1>
-        </div>
-
-        <div class="content">
-            <div class="card">
-                <div class="icon">
-                    <i class="fas fa-file-excel"></i>
-                </div>
-                <h2>Load Demand</h2>
-                <p class="description">Select an Excel (.xlsx) file with demand data</p>
-
-                <div class="file-input-container">
-                    <label for="fileInput" class="file-input-label">
-                        <i class="fas fa-cloud-upload-alt"></i> Select file
-                    </label>
-                    <input type="file" id="fileInput" accept=".xls,.xlsx">
-                </div>
-
-                <div class="actions">
-                    <button class="btn btn-primary" id="cargarBtn">
-                        <i class="fas fa-upload"></i> Load
-                    </button>
-                    <button class="btn" id="continuarBtn" disabled>
-                        <i class="fas fa-arrow-right"></i> Continue
-                    </button>
-                </div>
-
-                <p id="mensaje" class="file-info"></p>
-                <div id="resultados"></div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>Smart Capacity Calculator &copy; 2025</p>
-        </div>
-    </div>
-    <script  src="./script/menu.js"></script>
-    <script src="./script/db.js"></script>
-    <script src="./script/index.js"></script>
+  
 </body>
 </html>
