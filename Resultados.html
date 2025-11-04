@@ -7,15 +7,64 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./style/resultados.css">
     <link rel="icon" href="./style/sources/olaColor.png">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap'><link rel="stylesheet" href="./style/menu.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
+
+
     <div id="tooltip" class="tooltip">
     <div id="tooltip-content"></div>
 </div>
+    <nav class="sidebar close">
+  <header>
+    <div class="image-text">
+      <span class="image">
+        <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="">
+      </span>
+      <div class="text logo-text">
+        <span class="name">
+            <img src="./style/sources/logo2.png" alt="" class="logo-img-small" width="100%" height="100%" >
+        </span>
+        <span class="profession">SSC</span>
+      </div>
+    </div>
+
+    <i class='bx bx-chevron-right toggle'></i>
+  </header>
+  <div class="menu-bar">
+    <div class="menu">
+      <ul class="menu-links">
+        <li class="nav-link">
+          <a href="index.html">
+            <i class='bx bx-home-alt icon'></i>
+            <span class="text nav-text">Home</span>
+          </a>
+        </li>
+
+        <li class="nav-link">
+          <a href="#">
+            <i class='bx bx-bar-chart-alt-2 icon'></i>
+            <span class="text nav-text">Revenue</span>
+          </a>
+        </li>
+
+
+        <li class="nav-link">
+          <a href="nuevaAplicacion.html">
+            <i class='bx bx-pie-chart-alt icon'></i>
+            <span class="text nav-text">Analytics</span>
+          </a>
+        </li>
+
+
+      </ul>
+    </div>
+  </div>
+</nav>
     <div class="container">
         <div class="logo-container export-pdf">
     <div class="logo-fallback"></div>
@@ -96,7 +145,7 @@
             <p>Smart Capacity Calculator &copy; 2025</p>
         </div>
     </div>
-
+    <script  src="./script/menu.js"></script>
     <script src="./script/db.js"></script>
     <script src="./script/resultados.js"></script>
 </body>

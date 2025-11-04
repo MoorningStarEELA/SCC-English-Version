@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await window.clearObjectStore(window.STORE_DEMANDA);
             await window.clearObjectStore(window.STORE_INFORMACION);
             await window.clearObjectStore(window.STORE_FORM_ADICIONAL);
-            window.location.href = './index.html';
+            window.location.href = './Inicio.html';
         } catch (error) {
             console.error('Error al borrar datos:', error);
         }

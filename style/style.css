@@ -73,12 +73,12 @@ body {
 }
 
 .lefter {
-  
+  transform: translateX(30px) translateZ(-50%) rotateY(-5deg);
   background-image: url(./sources/olaColor.png);
 }
 
 .left {
-  transform: translateX(-30px) translateZ(-25px) rotateY(-5deg);
+  
   background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/creative_draw-512.png);
 }
 
@@ -87,11 +87,12 @@ body {
   background-image:url(./sources/logo.png);
 }
 .right {
-  transform: translateX(30px) translateZ(-25px) rotateY(5deg);
+  
   background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/cloud_weather-512.png);
 }
 
 .righter {
+  transform: translateX(50px) translateZ(-50%) rotateY(5deg);
   background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/search-512.png);
 }
 
@@ -121,10 +122,6 @@ body {
   pointer-events: auto;
 }
 
-/* --- Desactiva el bloqueo de clics de los hijos (por seguridad) --- */
-.lefter * , .center * , .righter * {
-  pointer-events: none;
-}
 
 /* --- Efecto visual al pasar el mouse --- */
 .lefter:hover, .righter:hover {
