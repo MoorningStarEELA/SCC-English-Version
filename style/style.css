@@ -76,7 +76,7 @@ body {
 
 .lefter {
   transform: translateX(-60px) translateZ(-50px) rotateY(-10deg);
-  background-image: url(./style/sources/olaColor.png);
+  background-image: url("./sources/olaColor.png");
 }
 
 .left {
@@ -86,7 +86,7 @@ body {
 
 .center {
   opacity: 1;
-  background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/app_window-512.png);
+  background-image: url("./sources/logo.png");
 }
 
 .right {
