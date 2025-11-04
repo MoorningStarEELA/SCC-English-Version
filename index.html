@@ -9,8 +9,12 @@
 <!-- Funcion para navegar entre aplicaciones -->
 <script>
   function redirigir(url){
-    console.log("Redirigiendo a " + url);
-    window.location.href = url;
+    const elemento = event.currentTarget;
+    elemento.classList.add("clicked");
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 200);
   }
 </script>
 <body>
@@ -26,7 +30,7 @@
   <div class="text">Select an option</div>
   </div>
 
-<div class="righter">
+<div class="righter" onclick="redirigir('NuevaAplicacion.html')">
   <div class="text">New App</div>
 </div>
 </div>

@@ -21,10 +21,11 @@ body {
   transition: all 1.3s ease-out;
   justify-content: center;
   transform-style: preserve-3d;
+   gap: 60px;
 }
 
 .all:hover {
-  perspective: 1000px;
+  perspective: 10000px;
   transition: all 1.0s ease-in;
   transform: perspective(10000px) rotateX(0deg);
 }
@@ -40,8 +41,8 @@ body {
 }
 
 .left, .center, .right, .lefter, .righter {
-  width: 200px;
-  height: 150px;
+  width: 300px;
+  height: 190px;
   transform-style: preserve-3d;
   border-radius: 10px;
   border: 1px solid #fff;
@@ -57,15 +58,12 @@ body {
   cursor: pointer;
   background-blend-mode: color-burn;
 }
-.left:hover, .right:hover, .lefter:hover, .righter:hover {
-  box-shadow: 0 0 30px 10px rgba(100, 100, 255, 0.6);
-  background-color: rgba(17, 16, 16, 0.575);
-}
+
 
 .text {
   transform: translateY(30px);
   opacity: 0;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   bottom: 0;
   left: 5px;
   position: absolute;
@@ -75,27 +73,25 @@ body {
 }
 
 .lefter {
-  transform: translateX(-60px) translateZ(-50px) rotateY(-10deg);
-  background-image: url("./sources/olaColor.png");
+  
+  background-image: url(./sources/olaColor.png);
 }
 
 .left {
   transform: translateX(-30px) translateZ(-25px) rotateY(-5deg);
-  background-image: url("./sources/olaColor.png");
+  background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/creative_draw-512.png);
 }
 
 .center {
   opacity: 1;
-  background-image: url("./sources/logo.png");
+  background-image:url(./sources/logo.png);
 }
-
 .right {
   transform: translateX(30px) translateZ(-25px) rotateY(5deg);
   background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/cloud_weather-512.png);
 }
 
 .righter {
-  transform: translateX(60px) translateZ(-50px) rotateY(10deg);
   background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/search-512.png);
 }
 
@@ -106,11 +102,40 @@ body {
   transition: all 0.6s ease;
   width: 100%;
   height: 100%;
-  background-color: #0e0e18;
+  background-color: #303050;
   background-image: radial-gradient(circle at center top, #cce, #33a);
   border-radius: 10px;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
+ 
+}
+
+/* --- Asegura que toda la tarjeta responda al click --- */
+.lefter, .center, .righter {
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  pointer-events: auto;
+}
+
+/* --- Desactiva el bloqueo de clics de los hijos (por seguridad) --- */
+.lefter * , .center * , .righter * {
+  pointer-events: none;
+}
+
+/* --- Efecto visual al pasar el mouse --- */
+.lefter:hover, .righter:hover {
+  box-shadow: 0 0 35px 10px rgba(100, 180, 255, 0.8);
+  background-color: rgba(11, 11, 12, 0.753);
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+/* --- Efecto al hacer clic --- */
+.clicked {
+  box-shadow: 0 0 50px 15px rgba(150, 220, 255, 1);
+  transform: scale(1.1);
 }
