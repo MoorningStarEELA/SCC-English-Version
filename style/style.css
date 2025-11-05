@@ -54,7 +54,7 @@ body {
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: #58d;
+  background-color: rgba(255, 254, 254, 0);
   cursor: pointer;
   background-blend-mode: color-burn;
 }
@@ -79,12 +79,12 @@ body {
 
 .left {
   
-  background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/creative_draw-512.png);
+  background-image: url(./sources/olaBnw.png);
 }
 
 .center {
   opacity: 1;
-  background-image:url(./sources/logo.png);
+  background-image:url(./sources/logo2.png);
 }
 .right {
   
@@ -93,7 +93,7 @@ body {
 
 .righter {
   transform: translateX(50px) translateZ(-50%) rotateY(5deg);
-  background-image: url(https://cdn3.iconfinder.com/data/icons/other-icons/48/search-512.png);
+  background-image: url(./sources/desarrollo-de-ia\ \(1\).png);
 }
 
 .explainer {
