@@ -21,25 +21,6 @@
   --tran-05: all 0.3s ease;
 }
 
-body {
-  min-height: 100vh;
-  background-color: var(--body-color);
-  transition: var(--tran-05);
-}
-
-::selection {
-  background-color: var(--primary-color);
-  color: #fff;
-}
-
-body.dark {
-  --body-color: #18191a;
-  --sidebar-color: #242526;
-  --primary-color: #3a3b3c;
-  --primary-color-light: #3a3b3c;
-  --toggle-color: #fff;
-  --text-color: #ccc;
-}
 
 /* ===== Sidebar ===== */
 .sidebar {
@@ -152,9 +133,7 @@ header .image-text .profession {
   transition: var(--tran-05);
 }
 
-body.dark .sidebar header .toggle {
-  color: var(--text-color);
-}
+
 
 .sidebar.close .toggle {
   transform: translateY(-50%) rotate(0deg);
@@ -287,7 +266,6 @@ body.dark .switch::before {
   left: 250px;
   height: 100vh;
   width: calc(100% - 250px);
-  background-color: var(--body-color);
   transition: var(--tran-05);
 }
 .home .text {

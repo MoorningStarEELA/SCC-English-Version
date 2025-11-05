@@ -4,8 +4,8 @@
     --secondary: #42c1c7;
     --accent: #90ffff;
     --dark: #1a1a2e;
-    --light: #f8f9fa;
-    --success: #4CAF50;
+    --light: #ffffff;
+    --success: #04fc11;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
 }
@@ -18,7 +18,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg,#047af0, #1a2a6c );
+    background: linear-gradient(135deg,#000000, #0336ff );
     color: var(--light);
     min-height: 100vh;
     display: flex;
@@ -31,7 +31,7 @@ body {
 }
 
 .container {
-    background: rgba(26, 26, 46, 0.616);
+    background: rgba(253, 253, 253, 0.199);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     box-shadow: var(--shadow);
@@ -98,14 +98,14 @@ body {
 
 .title {
     background: var(--primary);
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 15px 25px;
-    border-radius: 50px;
+    border-radius: 100px;
     display: inline-block;
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.527);
     transition: var(--transition);
 }
 
@@ -158,7 +158,7 @@ body {
 
 .btn {
     display: inline-block;
-    background: white;
+    background: rgb(6, 194, 241);
     color: var(--dark);
     padding: 14px 35px;
     border-radius: 50px;
@@ -170,7 +170,7 @@ body {
     letter-spacing: 1px;
     margin: 10px 5px;
     transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.267);
 }
 
 .btn-primary {
