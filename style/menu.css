@@ -273,6 +273,14 @@ body.dark .switch::before {
   font-weight: 500;
   color: var(--text-color);
   padding: 12px 60px;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+
+}
+nav:not(.close) ~ .home .text {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .sidebar.close ~ .home {
