@@ -428,3 +428,22 @@ body {
         width: 200px;
         text-align: center;
     }
+    .tooltipHtml2{
+        position: absolute;
+        background-color: #070d0f;
+        color: #fff;
+        border-color: #04f5f5;
+        border-width: 2px;
+        border-style:double;
+        padding: 15 px;
+        border-radius: 10 px;
+        font-size: 14px;
+        pointer-events: none;
+        opacity: 0;
+        transform-origin: opacity 0.3s;
+        z-index: 1000;    
+        border-radius: 30px;
+        height: 130px;
+        width: 200px;
+        text-align: center;
+    }

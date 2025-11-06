@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         tooltipContent.innerHTML = tooltipHtml;
                     }
 
+                
                     // Posicionar el tooltip cerca del cursor
                     tooltip.style.left = `${event.pageX + 15}px`;
                     tooltip.style.top = `${event.pageY + 15}px`;
@@ -202,6 +203,38 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Exponer las funciones al ámbito global para que onmouseover pueda llamarlas
                 window.showTooltip = showTooltip;
                 window.hideTooltip = hideTooltip;
+
+                // Para la alerta del boton 
+            function showTooltip2(event) {
+                let tooltip = document.getElementById('tooltip2');
+                if(!tooltip){
+                    tooltip = document.createElement('div');
+                    tooltip.id = 'tooltip2';
+                    tooltip.classList.add('tooltipHtml2');
+                    document.body.appendChild(tooltip);
+                }
+                tooltip.innerHTML = `
+                          <strong>Antes de irte...</strong><br>
+                            ¿No te gustaría calcular tus químicos?<br>
+                            <em>Haz clic en “QUASAR” para hacerlo.</em>
+                        `;
+                
+                
+                // Posicionar el tooltip cerca del cursor
+                tooltip.style.left = `${event.pageX + 15}px`;
+                tooltip.style.top = `${event.pageY + 15}px`;
+                tooltip.style.opacity = 1;
+            }
+
+            function hideTooltip2() {
+                    const tooltip = document.getElementById('tooltip2');
+                    if(tooltip) tooltip.style.opacity = 0;
+                }
+            window.showTooltip2 = showTooltip2;
+            window.hideTooltip2 = hideTooltip2;
+            regresarBtn.onmouseover = function(event) { showTooltip2(event, regresarBtn); };
+            regresarBtn.onmouseout = hideTooltip2;
+
             // --- Lógica de la gráfica ---
            
                         const ctx = document.getElementById('grafica').getContext('2d');
