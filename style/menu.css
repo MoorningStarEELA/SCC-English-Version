@@ -278,6 +278,7 @@ body.dark .switch::before {
   transition: opacity 0.4s ease, visibility 0.4s ease;
 
 }
+
 nav:not(.close) ~ .home .text {
   visibility: hidden;
   opacity: 0;
