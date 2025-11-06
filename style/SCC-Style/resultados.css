@@ -443,7 +443,7 @@ body {
         transform-origin: opacity 0.3s;
         z-index: 1000;    
         border-radius: 30px;
-        height: 130px;
+        height: 100px;
         width: 200px;
         text-align: center;
     }

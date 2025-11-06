@@ -214,9 +214,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.body.appendChild(tooltip);
                 }
                 tooltip.innerHTML = `
-                          <strong>Antes de irte...</strong><br>
-                            ¿No te gustaría calcular tus químicos?<br>
-                            <em>Haz clic en “QUASAR” para hacerlo.</em>
+                          <strong>Before you go...</strong><br>
+                            Wouldn't you like to calculate your chemicals?<br>
+                            <em>Click on "QUASAR" to do it.</em>
                         `;
                 
                 
