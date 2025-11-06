@@ -447,3 +447,10 @@ body {
         width: 200px;
         text-align: center;
     }
+    /* Efecto de iluminación */
+.nav-link.highlight {
+  background-color: #1cd4f7 !important;
+  box-shadow: 0 0 4px #1cd4f780, 0 0 8px #1cd4f740;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}

@@ -207,6 +207,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Para la alerta del boton 
             function showTooltip2(event) {
                 let tooltip = document.getElementById('tooltip2');
+                const quasarLink = document.getElementById('quasarLink');
+
                 if(!tooltip){
                     tooltip = document.createElement('div');
                     tooltip.id = 'tooltip2';
@@ -218,18 +220,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                             Wouldn't you like to calculate your chemicals?<br>
                             <em>Click on "QUASAR" to do it.</em>
                         `;
-                
-                
                 // Posicionar el tooltip cerca del cursor
                 tooltip.style.left = `${event.pageX + 15}px`;
                 tooltip.style.top = `${event.pageY + 15}px`;
                 tooltip.style.opacity = 1;
+                if (quasarLink) quasarLink.classList.add('highlight');
             }
 
             function hideTooltip2() {
-                    const tooltip = document.getElementById('tooltip2');
-                    if(tooltip) tooltip.style.opacity = 0;
+                        const tooltip = document.getElementById('tooltip2');
+                        if (tooltip) tooltip.style.opacity = 0;
+
+                        // 🔹 Quitar iluminación al salir del tooltip
+                        if (quasarLink) quasarLink.classList.remove('highlight');
                 }
+
             window.showTooltip2 = showTooltip2;
             window.hideTooltip2 = hideTooltip2;
             regresarBtn.onmouseover = function(event) { showTooltip2(event, regresarBtn); };
