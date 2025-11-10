@@ -1,8 +1,4 @@
 /* Estilos específicos para formulario.html */
-.form-container {
-    max-width: 600px;
-    margin: 0 auto;
-}
 
 .status-icon {
     text-align: center;
@@ -28,8 +24,8 @@
 
 .radio-option {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: left;
+    gap: 20px;
 }
 
 .radio-option input {
@@ -38,7 +34,7 @@
 }
 
 .form-control {
-    width: 100%;
+    width: 50%;
     padding: 12px 15px;
     border-radius: 10px;
     border: none;
@@ -68,3 +64,26 @@
         padding: 10px 12px;
     }
 }
+
+
+
+.spinner-css img {
+   /* opcional, ajusta el tamaño */
+  animation: spin 1s linear infinite;
+  width: 200px;
+  height: auto;
+  float: right;
+
+}
+
+/* Animación */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(300deg);
+  }
+}
+
+

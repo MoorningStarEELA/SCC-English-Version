@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./style/Q.U.A.S.A.R.-Style/base.css">
     <link rel="stylesheet" href="./style/menu.css">
-    <link rel="stylesheet" href="./style/SCC-Style/formulario.css">
+    <link rel="stylesheet" href="./style/Q.U.A.S.A.R.-Style/formulario.css">
     <link rel="icon" href="./style/sources/olaColor.png">
     <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'>
 </head>
@@ -44,17 +44,19 @@
         </div>
         
         <div class="content">
-            <div class="status-icon">
-                <i class="fas fa-check-circle"></i>
+            <div class="spinner-css">
+            <img src="./style/sources/girar.png" alt="Cargando..."">
             </div>
-            <p class="message">Data successfully uploaded!</p>
-            <p class="description">Fill out the following information to continue</p>
-            
+             <div class="status-text">
+                <p class="message" >Data successfully uploaded!</p>
+                <p class="description">Fill out the following information to continue</p>
+            </div>
             <form id="dtAdicionales" class="form-container">
+                
                 <div class="form-group">
-                    <label for="Cantidad">Cantidad cantidad de soldadura se necesito?
+                    <label for="Cantidad">How much welding was required?
                     </label>
-                    <label>Ingrese su valor en kg/lb</label>
+                    <label>Enter your value in kg/lb</label>
                     <input type="number" id="Cantidad"Cantidad" name="Cantidad" class="form-control" required>
                 </div>
                 
@@ -73,7 +75,7 @@
     </div>
 
     <script src="./script/db.js"></script>
-    <script src="./script/formulario.js"></script>
+    
     
 </body>
 </html>

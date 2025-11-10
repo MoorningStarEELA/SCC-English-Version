@@ -412,3 +412,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+
+// AI Conection 
+
+async function smartPredict(values){
+    try {
+        const response = await fetch("http://127.0.0.1:5001/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values })
+        });
+
+        const data = await response.json();
+        console.log("AI Prediction:", data);
+
+        // Mostrar en HTML si tienes elementos para ello
+        const aiContainer = document.getElementById('aiResults');
+        if (aiContainer) {
+        aiContainer.innerHTML = `
+            <p><strong>Flux consumption:</strong> ${data.flux_prediction} L</p>
+            <p><strong>Solder consumption:</strong> ${data.solder_prediction} g</p>
+            <p><strong>Liquid usage:</strong> ${data.liquid_prediction} ml</p>
+        `;
+        } else {
+        console.warn("Elemento #aiResults no encontrado. Añádelo en tu HTML si quieres mostrar los resultados.");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Error connecting to SmartPredict:", error);
+  }
+}
+
+
