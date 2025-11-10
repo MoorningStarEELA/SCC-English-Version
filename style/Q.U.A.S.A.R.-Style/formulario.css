@@ -1,4 +1,8 @@
 /* Estilos específicos para formulario.html */
+.form-container {
+    max-width: 5;
+    margin: 0 auto;
+}
 
 .status-icon {
     text-align: center;
@@ -17,6 +21,8 @@
 }
 
 .radio-group {
+     max-width: 5;
+    margin: 0 auto;
     display: flex;
     gap: 20px;
     margin-top: 5px;
