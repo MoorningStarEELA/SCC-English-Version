@@ -1,27 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-    const cargarBtn = document.getElementById('cargarBtn');
+
     const continuarBtn = document.getElementById('continuarBtn');
     const mensaje = document.getElementById('mensaje');
-    const resultadosDiv = document.getElementById('resultados'); // Div para mostrar resultados
+    const resultadosDiv = document.getElementById('resultados');
 
-    cargarBtn.addEventListener('click', async () => {
+    continuarBtn.addEventListener('click', async () => {
+
         mensaje.textContent = 'Processing data...';
-        cargarBtn.disabled = true;
-        resultadosDiv.innerHTML = '<div class="spinner-css"><img src="./style/Q.U.A.S.A.R.-Style/spinner.gif" alt="Loading..."></div>';
-        
+        continuarBtn.disabled = true;
+
+        resultadosDiv.innerHTML = `
+            <link rel="stylesheet" href="./style/Q.U.A.S.A.R.-Style/formulario.css">
+            <div class="spinner-css">
+            <img src="./style/sources/girar.png" alt="Cargando..."">
+            </div>
+        `;
+
         mensaje.textContent = 'Calculating results...';
-        // Obtener datos de Demanda y Capacidad desde IndexedDB
+
+        // Obtener datos desde IndexedDB
         const capacidadData = await window.getAllDataFromIndexedDB(window.STORE_INFORMACION);
-        if (capacidadData.length === 0) {
-            mensaje.textContent = 'Error: Demand or Capacity data is missing. ❌';
-            cargarBtn.disabled = false;
-            resultadosDiv.innerHTML = '';
-            return;
-        }
-        console.log('Datos de Capacidad para cálculos:', capacidadData); // Nuevo log
+
+        // Filtrar columnas buscadas
+        const columnasbuscadas = capacidadData.map(item => ({
+            weldingUsage: item["Welding Usage Factor (Lb)"] || 0,
+            fluxUtilization: item["Flux Utilization Factor (Gl)"] || 0,
+            rtv: item["RTV Adhesives (g)"] || 0,
+            UV_Utilization: item["UV (g)"] || 0,
+            chemask: item["Chemask (gr)"] || 0
+        }));
+
+        console.log('Columnas buscadas para cálculos:', columnasbuscadas);
+
+        // --- GUARDAR LOS DATOS PARA LA SIGUIENTE PÁGINA ---
+        localStorage.setItem("QUASAR_ModelInfo", JSON.stringify(columnasbuscadas));
+
+        // Mensaje al usuario
+        mensaje.textContent = "Datos procesados correctamente. Redirigiendo... ✔️";
+
+        // Esperar 1.5 segundos y redirigir
+        setTimeout(() => {
+            window.location.href = './QUASAR2.html';
+        }, 1500);
     });
 
-//continuarBtn.disabled = false;
-//continuarBtn.classList.add('btn-primary');
-//continuarBtn.onclick = () => window.location.href = './QUASAR2.html';
+});
