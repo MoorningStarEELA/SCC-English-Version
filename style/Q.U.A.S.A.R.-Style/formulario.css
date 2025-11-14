@@ -75,10 +75,12 @@
 
 .spinner-css img {
    /* opcional, ajusta el tamaño */
-  animation: spin 1s linear infinite;
-  width: 200px;
+  animation: spin 0.7s linear infinite;
+  width: 300px;
   height: auto;
   float: right;
+  margin-right: 20px;
+  margin: 109px 0 0 0;
 
 }
 
