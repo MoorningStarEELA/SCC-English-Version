@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         continuarBtn.disabled = true;
 
         resultadosDiv.innerHTML = `
-            <link rel="stylesheet" href="./style/Q.U.A.S.A.R.-Style/formulario.css">
+            <link rel="stylesheet" href="./style/Q.U.A.S.A.R.-Style/index.css">
             <div class="spinner-css">
-            <img src="./style/sources/girar.png" alt="Cargando..."">
+            <img src="./style/sources/girar.png" alt="Cargando...">
             </div>
         `;
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Esperar 1.5 segundos y redirigir
         setTimeout(() => {
             window.location.href = './QUASAR2.html';
-        }, 1500);
+        },1500);
     });
 
 });

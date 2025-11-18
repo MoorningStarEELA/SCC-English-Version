@@ -320,26 +320,31 @@ body {
     margin-bottom: 8px;
 }
 
+/* ==== TABLAS BONITAS PRO ==== */
+
 .results-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0;
-    background: rgba(201, 12, 12, 0);
-    border-radius: 10px;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.05);  /* Fondo suave */
+    border-radius: 12px;
     overflow: hidden;
     font-size: 0.9rem;
-}
-
-.results-table th, .results-table td {
-    padding: 8px 10px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .results-table th {
     background: var(--primary);
     color: white;
+    padding: 12px;
+    text-align: center;
     font-weight: 600;
+}
+
+.results-table td {
+    padding: 10px;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .results-table tr:last-child td {
@@ -347,26 +352,18 @@ body {
 }
 
 .results-table tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Contenedor de tablas */
+.table-container {
+    width: 100%;
+    margin-top: 25px;
+    padding: 10px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.03);
 }
 
-.result-value {
-    font-weight: 600;
-    color: var(--accent);
-}
-
-.actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.table-container {
-    overflow-x: auto;
-    border-radius: 10px;
-    margin: 25px 0;
-}
 
 /* Nuevos estilos para la tabla del Top 10 */
 .top-10-table {

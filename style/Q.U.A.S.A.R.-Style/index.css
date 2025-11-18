@@ -36,3 +36,23 @@
         width: 100%;
     }
 }
+.spinner-css img {
+   /* opcional, ajusta el tamaño */
+  animation: spin 0.7s linear infinite;
+  width: 150px;
+  height: auto;
+  float: center;
+  margin-right: 90px;
+  margin: 9px 0 0 0;
+
+}
+
+/* Animación */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(300deg);
+  }
+}

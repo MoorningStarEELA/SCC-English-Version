@@ -414,7 +414,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // AI Conection 
-
+/* para conectar con SmartPredict y obtener predicciones basadas en los datos procesados 
+Y PARA UN FUTURO
 async function smartPredict(values){
     try {
         const response = await fetch("http://127.0.0.1:5001/predict", {
@@ -443,5 +444,5 @@ async function smartPredict(values){
         console.error("Error connecting to SmartPredict:", error);
   }
 }
-
+*/
 
