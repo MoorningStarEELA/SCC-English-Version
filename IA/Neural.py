@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return jsonify({
-        'message': 'Welcome to the AI Prediction API',
+        'message': 'Welcome to the AI Prediction Quasar',
         'endpoint' : '/predict',
         'method' : 'POST',
     })
