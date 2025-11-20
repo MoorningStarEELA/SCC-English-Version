@@ -1,9 +1,10 @@
 // --- CONFIGURACIÓN DE INDEXEDDB ---
 const DB_NAME = 'SCC_DataDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_DEMANDA = 'Demand';
 const STORE_INFORMACION = 'Model Information'; 
 const STORE_FORM_ADICIONAL = 'formularioAdicional';
+const STORE_QUASAR_DESPERDICIOS = 'Formulario Quasar Desperdicios';  
 
 // Abre la base de datos
 function openDb() {
@@ -23,6 +24,10 @@ function openDb() {
             
             if (!db.objectStoreNames.contains(STORE_FORM_ADICIONAL)) {
                 db.createObjectStore(STORE_FORM_ADICIONAL, { keyPath: 'id', autoIncrement: true });
+            }
+
+            if(!db.objectStoreNames.contains(STORE_QUASAR_DESPERDICIOS)) {
+                db.createObjectStore(STORE_QUASAR_DESPERDICIOS, { keyPath: 'id', autoIncrement: true });
             }
            
         };
@@ -132,6 +137,7 @@ function processSheet(worksheet, columnsToExtract = null) {
 }
 
 
+
 // Limpia un object store
 function clearObjectStore(storeName) {
     return new Promise(async (resolve, reject) => {
@@ -159,3 +165,4 @@ window.clearObjectStore = clearObjectStore;
 window.STORE_DEMANDA = STORE_DEMANDA;
 window.STORE_INFORMACION = STORE_INFORMACION;
 window.STORE_FORM_ADICIONAL = STORE_FORM_ADICIONAL;
+window.STORE_QUASAR_DESPERDICIOS = STORE_QUASAR_DESPERDICIOS;
