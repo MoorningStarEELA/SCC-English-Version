@@ -20,9 +20,27 @@ try {
         const desperdicioRTV = latestResponse.rtv ?? 0;
         const desperdicioUV = latestResponse.uv ?? 0;
         const desperdicioChemask = latestResponse.chemask ?? 0;
-
+        // preguntar si es necesario redondear o hacerlo porcentaje
         ResultadoDesperdicioFlux.textContent = desperdicioFlux.toFixed(2);
+        ResultadoDesperdicioWelding.textContent = desperdicioWelding.toFixed(2);
+        ResultadoDesperdicioRTV.textContent = desperdicioRTV.toFixed(2);
+        ResultadoDesperdicioUV.textContent = desperdicioUV.toFixed(2);
+        ResultadoDesperdicioChemask.textContent = desperdicioChemask.toFixed(2);
+    }else{
+         console.warn("No se encontraron datos en STORE_FORM_ADICIONAL.");
+         ResultadoDesperdicioFlux.textContent = 'N/A';
+         ResultadoDesperdicioWelding.textContent = 'N/A';
+         ResultadoDesperdicioRTV.textContent = 'N/A';
+         ResultadoDesperdicioUV.textContent = 'N/A';
+         ResultadoDesperdicioChemask.textContent = 'N/A';
     }
+}catch (error) {
+    console.error("Error al obtener datos de desperdicios del formulario:", error);
+    ResultadoDesperdicioFlux.textContent = 'Error';
+    ResultadoDesperdicioWelding.textContent = 'Error';
+    ResultadoDesperdicioRTV.textContent = 'Error';
+    ResultadoDesperdicioUV.textContent = 'Error';
+    ResultadoDesperdicioChemask.textContent = 'Error';
 }
 
      // --- Botón de PDF ---
