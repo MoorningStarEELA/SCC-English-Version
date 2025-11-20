@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Flux: parseFloat(formDataDesperdicios.get('Flux')),
             Welding: parseFloat(formDataDesperdicios.get('Welding')),
             rtv: parseFloat(formDataDesperdicios.get('rtv')),
-            uv: parseFloat(formDataDesperdicios.get('UV')),
+            uv: parseFloat(formDataDesperdicios.get('uv')),
             chemask: parseFloat(formDataDesperdicios.get('chemask')),
             timestamp: new Date().toISOString()
         };

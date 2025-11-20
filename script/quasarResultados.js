@@ -1,6 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const ResultadoDesperdicioFlux = document.getElementById('ResultadoFlux');
+    const ResultadoDesperdicioWelding = document.getElementById('ResultadoWelding');
+    const ResultadoDesperdicioRTV = document.getElementById('ResultadoRTV');
+    const ResultadoDesperdicioUV = document.getElementById('ResultadoUV');
+    const ResultadoDesperdicioChemask = document.getElementById('ResultadoChemask');
+    const generarPDFBtn = document.getElementById('generarPDFBtn');
+    const regresarBtn = document.getElementById('regresarBtn');
+    const resultadoDesperdicioTable = document.getElementById('resultadoDesperdicioTable');
+    const top10TableBody = document.getElementById('top10TableBody');
 
+    let myChartInstance = null;
+    
+try {
+    const formResponsesDesperdicios = await window.getAllDataFromIndexedDB(window.STORE_QUASAR_DESPERDICIOS);
+    if( formResponsesDesperdicios && formResponsesDesperdicios.length > 0 ) {
+        const latestResponse = formResponsesDesperdicios[0];
+        const desperdicioFlux = latestResponse.Flux ?? 0;
+        const desperdicioWelding = latestResponse.Welding ?? 0;
+        const desperdicioRTV = latestResponse.rtv ?? 0;
+        const desperdicioUV = latestResponse.uv ?? 0;
+        const desperdicioChemask = latestResponse.chemask ?? 0;
 
+        ResultadoDesperdicioFlux.textContent = desperdicioFlux.toFixed(2);
+    }
+}
 
      // --- Botón de PDF ---
     generarPDFBtn.addEventListener('click', async () => {
