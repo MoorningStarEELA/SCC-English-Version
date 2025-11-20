@@ -7,16 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
         mensaje.textContent = 'Guardando datos...'; 
 
 
-        const formDataDesperdicios = new
+        
+        const formDataDesperdicios = new FormData(form);
         const formAnswersDesperdicios = {
             Flux : parseFloat(formDataDesperdicios.get('Flux')),
             Welding : parseFloat(formDataDesperdicios.get('Welding')),
             rtv : parseFloat(formDataDesperdicios.get('rtv')),
-            uv : paserFloat(formfDataDesperdicios.get('UV')),
+            uv : parseFloat(formDataDesperdicios.get('UV')),
             chemask : parseFloat(formDataDesperdicios.get('chemask')),
             timestamp: new Date().toISOString()
         };
-        
 
+        
     });
 });
