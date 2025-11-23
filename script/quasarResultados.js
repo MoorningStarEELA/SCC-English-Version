@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Welding', 'Flux', 'RTV', 'UV', 'Chemask'],
+                    labels: ['Welding (gal)', 'Flux (Lb)', 'RTV (gr)', 'UV (gr)', 'Chemask (gr)'],
                     datasets: [{
                         label: `Consumo mensual (${mesActualNombre})`,
                         data: [
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // 7) Botón regresar: limpiar stores relevantes y volver a Inicio.html (igual que SCC)
+    // 7) Botón regresar: limpiar stores relevantes y volver a Inicio.html 
 
     if (btnRegresar) {
         btnRegresar.addEventListener('click', async () => {
