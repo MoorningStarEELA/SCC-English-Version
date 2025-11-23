@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mesActualIndex = ahora.getMonth();
     const mesActualNombre = meses[mesActualIndex];
 
-    // -------------------------
+
     // 1) Leer desperdicios (STORE_QUASAR_DESPERDICIOS)
-    // -------------------------
+   
     let desperdicios = { Flux: 0, Welding: 0, rtv: 0, uv: 0, chemask: 0 };
     try {
         const resp = await window.getAllDataFromIndexedDB(window.STORE_QUASAR_DESPERDICIOS);
@@ -72,9 +72,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (elUVData) elUVData.textContent = desperdicios.uv.toFixed(3);
     if (elChemaskData) elChemaskData.textContent = desperdicios.chemask.toFixed(3);
 
-    // -------------------------
+
     // 2) Leer demanda y datos de modelos (STORE_DEMANDA, STORE_INFORMACION, STORE_INFORMACION_QUASAR)
-    // -------------------------
+
     let demandaData = [];
     let infoData = [];
     let infoQuasarData = [];
@@ -108,15 +108,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn('No hay datos de capacidad (STORE_INFORMACION o STORE_INFORMACION_QUASAR).');
     }
 
-    // -------------------------
+
     // 3) Extraer factores por modelo y calcular consumo por modelo para el mes actual
-    // -------------------------
+
     // Buscamos columnas:
-    // "Welding Usage Factor (Lb)", "Flux Utilization Factor (Gl)", "RTV Adhesives (g)", "UV (g)", "Chemask (gr)"
+    // "Welding Usage Factor (Lb)", "Flux Utilization Factor (Gl)", "RTV Adhesives (gr)", "UV (gr)", "Chemask (gr)"
     const keyWelding = 'Welding Usage Factor (Lb)';
     const keyFlux = 'Flux Utilization Factor (Gl)';
-    const keyRTV = 'RTV Adhesives (g)';
-    const keyUV = 'UV (g)';
+    const keyRTV = 'RTV Adhesives (gr)';
+    const keyUV = 'UV (gr)';
     const keyChemask = 'Chemask (gr)';
 
     const consumoModelos = []; // array de { modelo, welding, flux, rtv, uv, chemask, total, demanda }
@@ -144,12 +144,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const uvFactor = parseFloat(fila[keyUV] ?? 0) || 0;
             const chemaskFactor = parseFloat(fila[keyChemask] ?? 0) || 0;
 
-            // -----------------------
+           
             // Interpretación del desperdicio (OPCION B):
             // desperdicio guardado en 'desperdicios' es una CANTIDAD POR UNIDAD que se multiplica por la demanda.
             // consumoIdeal = factor * demanda
             // consumoFinal = demanda * (factor + desperdicio)
-            // -----------------------
+           
             const welding = demanda * (weldingFactor + (desperdicios.Welding || 0));
             const flux = demanda * (fluxFactor + (desperdicios.Flux || 0));
             const rtv = demanda * (rtvFactor + (desperdicios.rtv || 0));
@@ -169,9 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // -------------------------
+
     // 4) Top 10 modelos por consumo total
-    // -------------------------
+   
     const top10 = consumoModelos
         .sort((a,b) => b.total - a.total)
         .slice(0, 10);
@@ -235,9 +235,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     llenarSemanas(elUVW, semanal.uv);
     llenarSemanas(elChemaskW, semanal.chemask);
 
-    // -------------------------
+   
     // 5) Graficar consumo mensual por químico (barra)
-    // -------------------------
+   
     try {
         if (graficaCanvas) {
             const ctx = graficaCanvas.getContext('2d');
@@ -283,9 +283,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error creando la gráfica:', err);
     }
 
-    // -------------------------
+   
     // 6) Botón generar PDF (usa html2canvas + jsPDF similar a SCC)
-    // -------------------------
+   
     if (btnPDF) {
         btnPDF.addEventListener('click', async () => {
             btnPDF.style.display = 'none';
@@ -317,9 +317,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // -------------------------
     // 7) Botón regresar: limpiar stores relevantes y volver a Inicio.html (igual que SCC)
-    // -------------------------
+
     if (btnRegresar) {
         btnRegresar.addEventListener('click', async () => {
             try {
@@ -339,9 +338,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // -------------------------
+
     // 8) Si no hay modelos con demanda, mostrar mensaje en tablas (opcional)
-    // -------------------------
+
     if (consumoModelos.length === 0) {
         if (top10ModelsBody) {
             top10ModelsBody.innerHTML = `<tr><td colspan="8">No hay modelos con demanda para ${mesActualNombre}.</td></tr>`;
