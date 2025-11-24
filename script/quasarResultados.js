@@ -196,16 +196,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // También llenamos la sección "Top 10 Most Used Models per Month" (resumen semanal por química)
     // Calculamos totales mensuales por química (suma por todos los modelos)
-    const totalsMensual = consumoModelos.reduce((acc, cur) => {
-        acc.welding += cur.welding;
-        acc.flux += cur.flux;
-        acc.rtv += cur.rtv;
-        acc.uv += cur.uv;
-        acc.chemask += cur.chemask;
+    const totalsMensual = capacidadData.reduce((acc, fila) => {
+
+        const weldingFactor = parseFloat(fila["Welding Usage Factor (Lb)"]) || 0;
+        const fluxFactor    = parseFloat(fila["Flux Utilization Factor (Gl)"]) || 0;
+        const rtvFactor     = parseFloat(fila["RTV Adhesives (g)"]) || 0;
+        const uvFactor      = parseFloat(fila["UV (g)"]) || 0;
+        const chemaskFactor = parseFloat(fila["Chemask (gr)"]) || 0;
+
+        acc.welding += weldingFactor;
+        acc.flux    += fluxFactor;
+        acc.rtv     += rtvFactor;
+        acc.uv      += uvFactor;
+        acc.chemask += chemaskFactor;
+
         return acc;
+
     }, { welding:0, flux:0, rtv:0, uv:0, chemask:0 });
 
-    // Rellenar datos mensuales en el panel "Data Summary Mouthly"
+
+    // Rellenar datos mensuales en el panel "Data Summary Monthly"
     if (elFluxData) elFluxData.textContent = totalsMensual.flux.toFixed(3);
     if (elWeldingData) elWeldingData.textContent = totalsMensual.welding.toFixed(3);
     if (elRTVData) elRTVData.textContent = totalsMensual.rtv.toFixed(3);
