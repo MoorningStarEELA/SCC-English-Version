@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const chemaskFactor = parseFloat(fila[keyChemask] ?? 0) || 0;
 
            
-            // Interpretación del desperdicio (OPCION B):
+            // Interpretación del desperdicio :
             // desperdicio guardado en 'desperdicios' es una CANTIDAD POR UNIDAD que se multiplica por la demanda.
             // consumoIdeal = factor * demanda
             // consumoFinal = demanda * (factor + desperdicio)
@@ -186,7 +186,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${m.modelo}</td>
                 <td>${(m.flux).toFixed(3)}</td>
                 <td>${(m.welding).toFixed(3)}</td>
-                <td>-</td>
                 <td>${(m.rtv).toFixed(3)}</td>
                 <td>${(m.uv).toFixed(3)}</td>
                 <td>${(m.chemask).toFixed(3)}</td>
@@ -329,7 +328,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e) { /*ignore*/ }
                     try { await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS); } catch(e) { /*ignore*/ }
                 }
-                window.location.href = './Inicio.html';
+                window.location.href = './QUASAR.html';
             } catch (err) {
                 console.error('Error al regresar/limpiar datos:', err);
                 // aún así intentamos navegar
