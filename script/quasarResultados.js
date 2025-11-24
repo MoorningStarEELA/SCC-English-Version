@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (err) {
                 console.error('Error al regresar/limpiar datos:', err);
                 // aún así intentamos navegar
-                window.location.href = './Inicio.html';
+                window.location.href = './QUASAR.html';
             }
         });
     }
