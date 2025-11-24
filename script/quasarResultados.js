@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // "Welding Usage Factor (Lb)", "Flux Utilization Factor (Gl)", "RTV Adhesives (gr)", "UV (gr)", "Chemask (gr)"
     const keyWelding = 'Welding Usage Factor (Lb)';
     const keyFlux = 'Flux Utilization Factor (Gl)';
-    const keyRTV = 'RTV Adhesives (gr)';
-    const keyUV = 'UV (gr)';
+    const keyRTV = 'RTV Adhesives (g)';
+    const keyUV = 'UV (g)';
     const keyChemask = 'Chemask (gr)';
 
     const consumoModelos = []; // array de { modelo, welding, flux, rtv, uv, chemask, total, demanda }
