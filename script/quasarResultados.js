@@ -294,6 +294,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
    
     // 6) Botón generar PDF (usa html2canvas + jsPDF similar a SCC)
+   function expandContainerForPDF() {
+    const container = document.querySelector('.container');
+    if (!container) return;
+
+    // Guardar altura original
+    container.dataset.originalHeight = container.style.height;
+
+    // Expandir al contenido real (# contenido completo visible)
+    container.style.height = 'auto';
+}
+function restoreContainerAfterPDF() {
+    const container = document.querySelector('.container');
+    if (!container) return;
+
+    container.style.height = container.dataset.originalHeight || '';
+}
+
+
    
     if (btnPDF) {
         btnPDF.addEventListener('click', async () => {
@@ -301,6 +319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (btnRegresar) btnRegresar.style.display = 'none';
 
             try {
+                expandContainerForPDF();
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF('p', 'pt', 'letter');
                 const content = document.querySelector('.container') || document.body;
@@ -320,6 +339,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (e) {
                 console.error('Error generando PDF:', e);
             } finally {
+                restoreContainerAfterPDF();
                 if (btnPDF) btnPDF.style.display = 'inline-block';
                 if (btnRegresar) btnRegresar.style.display = 'inline-block';
             }
