@@ -48,7 +48,7 @@
                 <li class="nav-link" id="quasarLink">
                     <a href="QUASAR.html"><i class='bx bx-pie-chart-alt icon'></i><span class="text nav-text">QUASAR</span></a>
                 </li>
-                <li>
+                <li class="nav-link" id="SCCLink">
                     <a href="Inicio.html"><i class='bx bx-bar-chart-alt-2 icon'></i><span class="text nav-text">SCC</span></a>
                 </li>
             </ul>
@@ -59,7 +59,7 @@
     <section class="home">
         <div class="text"><img src="./style/sources/logo2.png" alt="Logo" width="300px"></div>
     </section>
-    
+
     <div class="logo-container">
             <img src="./style/sources/LogoQUASAR.png" alt="QUASAR" class="logo-alt">
     </div>
@@ -142,7 +142,10 @@
 
             <div class="actions">
                 <button class="btn btn-primary" id="generarPDF"><i class="fas fa-download"></i> Download Report</button>
-                <button class="btn" id="regresarBtn"><i class="fas fa-arrow-left"></i> Home</button>
+                <button class="btn" id="regresarBtn"
+                onmouseover = "showTooltip2(event)"
+                 onmouseout="hideTooltip2()">
+                    <i class="fas fa-arrow-left"></i> Home</button>
             </div>
 
         </div>

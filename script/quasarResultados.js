@@ -310,6 +310,10 @@ function restoreContainerAfterPDF() {
 
     container.style.height = container.dataset.originalHeight || '';
 }
+function showTooltip2(event) {
+    let tooltip = document.getElementById("tooltip2");
+    const sccLink = document.getElementById("SCCLink");
+}
 
 
    

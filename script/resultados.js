@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             sumaPorMesReal[mesActualNombre] = sumaUtilizacionReal;
                             sumaPorMesReal100[mesActualNombre] = sumaUtilizacion100;
 
-                            console.log(`📊 ${mesActualNombre} → Real: ${sumaUtilizacionReal.toFixed(3)}, 100%: ${sumaUtilizacion100.toFixed(3)}`);
+                            console.log(` ${mesActualNombre} → Real: ${sumaUtilizacionReal.toFixed(3)}, 100%: ${sumaUtilizacion100.toFixed(3)}`);
                         });
 
                         // --- preparar datos para Chart.js ---
