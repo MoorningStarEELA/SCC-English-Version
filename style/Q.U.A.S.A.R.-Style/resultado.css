@@ -320,8 +320,29 @@ body {
     margin-bottom: 8px;
 }
 
-/* ==== TABLAS BONITAS PRO ==== */
-
+/* ==== TABLAS BONITAS ==== */
+.results-table-week{
+    width: 20%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.05);  /* Fondo suave */
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+.results-table-week th {
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+.results-table-week td {
+    padding: 10px;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
 .results-table {
     width: 100%;
     border-collapse: collapse;

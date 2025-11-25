@@ -198,29 +198,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Calculamos totales mensuales por química (suma por todos los modelos)
     const totalsMensual = capacidadData.reduce((acc, fila) => {
 
-        const weldingFactor = parseFloat(fila["Welding Usage Factor (Lb)"]) || 0;
-        const fluxFactor    = parseFloat(fila["Flux Utilization Factor (Gl)"]) || 0;
-        const rtvFactor     = parseFloat(fila["RTV Adhesives (g)"]) || 0;
-        const uvFactor      = parseFloat(fila["UV (g)"]) || 0;
-        const chemaskFactor = parseFloat(fila["Chemask (gr)"]) || 0;
+            const weldingFactor = parseFloat(fila["Welding Usage Factor (Lb)"]) || 0;
+            const fluxFactor    = parseFloat(fila["Flux Utilization Factor (Gl)"]) || 0;
+            const rtvFactor     = parseFloat(fila["RTV Adhesives (g)"]) || 0;
+            const uvFactor      = parseFloat(fila["UV (g)"]) || 0;
+            const chemaskFactor = parseFloat(fila["Chemask (gr)"]) || 0;
 
-        acc.welding += weldingFactor;
-        acc.flux    += fluxFactor;
-        acc.rtv     += rtvFactor;
-        acc.uv      += uvFactor;
-        acc.chemask += chemaskFactor;
+            acc.welding += weldingFactor;
+            acc.flux    += fluxFactor;
+            acc.rtv     += rtvFactor;
+            acc.uv      += uvFactor;
+            acc.chemask += chemaskFactor;
 
-        return acc;
+            return acc;
 
-    }, { welding:0, flux:0, rtv:0, uv:0, chemask:0 });
+        }, { welding:0, flux:0, rtv:0, uv:0, chemask:0 });
 
 
     // Rellenar datos mensuales en el panel "Data Summary Monthly"
-    if (elFluxData) elFluxData.textContent = totalsMensual.flux.toFixed(3);
-    if (elWeldingData) elWeldingData.textContent = totalsMensual.welding.toFixed(3);
-    if (elRTVData) elRTVData.textContent = totalsMensual.rtv.toFixed(3);
-    if (elUVData) elUVData.textContent = totalsMensual.uv.toFixed(3);
-    if (elChemaskData) elChemaskData.textContent = totalsMensual.chemask.toFixed(3);
+    if (elFluxData) elFluxData.textContent = `${totalsMensual.flux.toFixed(3)} Lb`;
+    if (elWeldingData) elWeldingData.textContent = `${totalsMensual.welding.toFixed(3)} gal`;
+    if (elRTVData) elRTVData.textContent = `${totalsMensual.rtv.toFixed(3)} g`;
+    if (elUVData) elUVData.textContent = `${totalsMensual.uv.toFixed(3)} g`;
+    if (elChemaskData) elChemaskData.textContent = `${totalsMensual.chemask.toFixed(3)} g`;
 
     // Dividir entre 4 semanas (simple división equitativa)
     const semanal = {
