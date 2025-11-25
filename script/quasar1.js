@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem("QUASAR_ModelInfo", JSON.stringify(columnasbuscadas));
 
         // Mensaje al usuario
-        mensaje.textContent = "Datos procesados correctamente. Redirigiendo... ✔️";
+        mensaje.textContent = "Data processed successfully. Thinking..";
 
         // Esperar 1.5 segundos y redirigir
         setTimeout(() => {

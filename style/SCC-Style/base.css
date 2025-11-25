@@ -54,7 +54,7 @@ body::after {
 }
 
 .container {
-    background: rgba(26, 26, 46, 0.616);
+    background: rgba(25, 25, 26, 0.253);
     backdrop-filter: blur(2px) saturate(180%);
     border-radius: 5rem;
     box-shadow: var(--shadow);

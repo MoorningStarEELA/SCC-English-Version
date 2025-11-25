@@ -54,9 +54,10 @@ body::after {
     100% { transform: translate(10%, 80%); }
 }
 .container {
-    background: rgba(157, 157, 158, 0.363);
+    background: rgba(172, 29, 19, 0.096);
     backdrop-filter: blur(2px) saturate(180%);
-    border-radius: 5rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 2rem;
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 800px;
