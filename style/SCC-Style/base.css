@@ -18,7 +18,9 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg,#047af0, #1a2a6c );
+    background: linear-gradient(135deg,#000000, #067fe2, #000000);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
     color: var(--light);
     min-height: 100vh;
     display: flex;
@@ -29,11 +31,32 @@ body {
     background-size: cover;
     line-height: 1.6;
 }
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: #0336ff33;
+    filter: blur(150px);
+    animation: blobMove 25s infinite alternate ease-in-out;
+    border-radius: 50%;
+}
+body::after {
+    background: #00faff33;
+    animation-duration: 30s;
+    animation-delay: -10s;
+}
+@keyframes blobMove {
+    0% { transform: translate(-10%, -10%); }
+    50% { transform: translate(70%, 20%); }
+    100% { transform: translate(10%, 80%); }
+}
 
 .container {
     background: rgba(26, 26, 46, 0.616);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
+    backdrop-filter: blur(2px) saturate(180%);
+    border-radius: 5rem;
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 800px;

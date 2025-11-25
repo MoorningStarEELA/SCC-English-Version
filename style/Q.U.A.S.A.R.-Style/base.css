@@ -19,7 +19,9 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg,#000000, #0336ff );
+    background: linear-gradient(135deg,#000000, #0336ff, #020f63 );
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
     color: var(--light);
     min-height: 100vh;
     display: flex;
@@ -30,12 +32,31 @@ body {
     background-size: cover;
     line-height: 1.6;
 }
-
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: #0336ff33;
+    filter: blur(150px);
+    animation: blobMove 25s infinite alternate ease-in-out;
+    border-radius: 50%;
+}
+body::after {
+    background: #00faff33;
+    animation-duration: 30s;
+    animation-delay: -10s;
+}
+@keyframes blobMove {
+    0% { transform: translate(-10%, -10%); }
+    50% { transform: translate(70%, 20%); }
+    100% { transform: translate(10%, 80%); }
+}
 .container {
-    background: rgba(253, 253, 253, 0.199);
+    background: rgba(157, 157, 158, 0.363);
     backdrop-filter: blur(2px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 2rem;
+    border-radius: 5rem;
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 800px;
@@ -44,45 +65,8 @@ body {
     margin: 60px 0 40px;
 }
 
-.container::after{
-    content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2rem;
-  backdrop-filter: blur(1px);
-  box-shadow: inset -10px -8px 0px -11px rgba(255, 255, 255, 1),
-              inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
-  opacity: 0.6;
-  z-index: -1;
-  filter: blur(1px) drop-shadow(10px 4px 6px black) brightness(115%);
-  mix-blend-mode: soft-light;
-    animation: glassReflect 6s ease-in-out infinite alternate;
-    z-index: -1;
-}
-@keyframes liquidGlassMove {
-    0% {
-        --p1x: 20%; --p1y: 30%;
-        --p2x: 80%; --p2y: 60%;
-    }
-    50% {
-        --p1x: 75%; --p1y: 70%;
-        --p2x: 25%; --p2y: 25%;
-    }
-    100% {
-        --p1x: 20%; --p1y: 30%;
-        --p2x: 80%; --p2y: 60%;
-    }
-}
 
-/* animación de reflejo */
-@keyframes glassReflect {
-    0%   { transform: translateX(-15%); }
-    100% { transform: translateX(15%); }
-}
+
 
 .logo-container {
     position: absolute;
