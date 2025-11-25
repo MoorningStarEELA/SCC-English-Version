@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Welding (gal)', 'Flux (Lb)', 'RTV (gr)', 'UV (gr)', 'Chemask (gr)'],
+                    labels: ['Welding (gal)', 'Flux (Lb)', 'RTV (g)', 'UV (g)', 'Chemask (g)'],
                     datasets: [{
                         label: `Consumo mensual (${mesActualNombre})`,
                         data: [
