@@ -184,11 +184,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             tr.innerHTML = `
                 <td>${idx + 1}</td>
                 <td>${m.modelo}</td>
-                <td>${(m.flux).toFixed(3)}</td>
-                <td>${(m.welding).toFixed(3)}</td>
-                <td>${(m.rtv).toFixed(3)}</td>
-                <td>${(m.uv).toFixed(3)}</td>
-                <td>${(m.chemask).toFixed(3)}</td>
+                <td>${(m.flux).toFixed(3)} Lb</td>
+                <td>${(m.welding).toFixed(3)} gal</td>
+                <td>${(m.rtv).toFixed(3)} g</td>
+                <td>${(m.uv).toFixed(3)} g</td>
+                <td>${(m.chemask).toFixed(3)} g</td>
             `;
             top10ModelsBody.appendChild(tr);
         });
@@ -232,18 +232,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Llenar celdas de semana (W1..W4)
-    function llenarSemanas(celdaArray, valor) {
-        if (!celdaArray || !celdaArray.length) return;
-        for (let i = 0; i < 4; i++) {
-            if (celdaArray[i]) celdaArray[i].textContent = valor.toFixed(3);
-        }
+    function llenarSemanas(celdaArray, valor, unidad) {
+    if (!celdaArray || !celdaArray.length) return;
+    for (let i = 0; i < 4; i++) {
+        if (celdaArray[i]) celdaArray[i].textContent = `${valor.toFixed(3)} ${unidad}`;
     }
-    llenarSemanas(elFluxW, semanal.flux);
-    llenarSemanas(elWeldingW, semanal.welding);
-    llenarSemanas(elRTVW, semanal.rtv);
-    llenarSemanas(elUVW, semanal.uv);
-    llenarSemanas(elChemaskW, semanal.chemask);
+}
 
+    llenarSemanas(elFluxW, semanal.flux,"Lb");
+    llenarSemanas(elWeldingW, semanal.welding,"gal");
+    llenarSemanas(elRTVW, semanal.rtv,"g");
+    llenarSemanas(elUVW, semanal.uv,"g");
+    llenarSemanas(elChemaskW, semanal.chemask,"g");
    
     // 5) Graficar consumo mensual por químico (barra)
    
