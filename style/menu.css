@@ -36,6 +36,7 @@
 }
 .sidebar.close {
   width: 88px;
+
 }
 
 /* ===== Reusable code - Here ===== */
@@ -137,6 +138,7 @@ header .image-text .profession {
 
 .sidebar.close .toggle {
   transform: translateY(-50%) rotate(0deg);
+  pointer-events: auto;
 }
 
 .sidebar .menu {

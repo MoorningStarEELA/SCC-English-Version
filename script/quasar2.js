@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        mensaje.textContent = 'Guardando datos...';
+        mensaje.textContent = 'Saving data...';
 
         const formDataDesperdicios = new FormData(form);
 
@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 [formAnswersDesperdicios]  //  ENVÍA ARREGLO, NO OBJETO
             );
 
-            mensaje.textContent = "Datos guardados correctamente ✔️";
+            mensaje.textContent = "Data saved successfully. Redirecting...";
 
             setTimeout(() => {
                 window.location.href = "QUASAR3.html";
             }, 1000);
 
         } catch (error) {
-            console.error("Error guardando desperdicios:", error);
-            mensaje.textContent = "Error al guardar los datos ❌";
+            console.error("Error saving waste data:", error);
+            mensaje.textContent = "Error saving data ❌";
         }
     });
 

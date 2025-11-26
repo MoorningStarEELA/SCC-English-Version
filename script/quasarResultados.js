@@ -310,10 +310,42 @@ function restoreContainerAfterPDF() {
 
     container.style.height = container.dataset.originalHeight || '';
 }
-function showTooltip2(event) {
-    let tooltip = document.getElementById("tooltip2");
-    const sccLink = document.getElementById("SCCLink");
+function showTooltipQuasar(event) {
+    let tooltip = document.getElementById('tooltipQuasar');
+    const SCCLink = document.getElementById('SCCLink');
+
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'tooltipQuasar';
+        tooltip.classList.add('tooltipHtml2');
+        document.body.appendChild(tooltip);
+    }
+
+    tooltip.innerHTML = `
+        <strong>Before you go...</strong><br>
+        Would you like to calculate your perfomance?<br>
+        <em>Click on "SCC" to do it.</em>
+    `;
+
+    tooltip.style.left = `${event.pageX + 15}px`;
+    tooltip.style.top = `${event.pageY + 15}px`;
+    tooltip.style.opacity = 1;
+
+    if (SCCLink) SCCLink.classList.add('highlight');
 }
+
+function hideTooltipQuasar() {
+    const tooltip = document.getElementById('tooltipQuasar');
+    const SCCLink = document.getElementById('SCCLink');
+
+    if (tooltip) tooltip.style.opacity = 0;
+    if (SCCLink) SCCLink.classList.remove('highlight');
+}
+
+/* 🔥 Exponer las funciones globalmente */
+window.showTooltipQuasar = showTooltipQuasar;
+window.hideTooltipQuasar = hideTooltipQuasar;
+
 
 
    

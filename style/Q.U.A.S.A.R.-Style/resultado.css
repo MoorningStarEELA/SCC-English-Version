@@ -507,3 +507,22 @@ body::after {
   border-radius: 10px;
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
+
+.tooltipHtml2 {
+    position: absolute;
+    background-color: #070d0f;
+    color: #fff;
+    border: 2px double #04f5f5;
+    padding: 10px;
+    border-radius: 3rem;
+    height: 80px;
+    width: 220px;
+    font-size: 14px;
+    pointer-events: none; /* Para no bloquear botones */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+}
+.tooltipHtml2.visible {
+    opacity: 1;
+}
