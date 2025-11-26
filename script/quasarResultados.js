@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             tooltip.innerHTML = `
                 <strong>Before you go...</strong><br>
-                Would you like to calculate your perfomance?<br>
-                <em>Click on "SCC" to do it.</em>
+                Remember that the data will be deleted.<br>
+                <em>Do you want to continue?</em>
             `;
 
             tooltip.style.left = `${event.pageX + 15}px`;
