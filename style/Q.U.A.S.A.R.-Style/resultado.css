@@ -496,7 +496,7 @@ body::after {
         transform-origin: opacity 0.3s;
         z-index: 1000;    
         border-radius: 30px;
-        height: 100px;
+        height: 150px;
         width: 200px;
         text-align: center;
     }
@@ -510,13 +510,13 @@ body::after {
 
 .tooltipHtml2 {
     position: absolute;
-    background-color: #070d0f;
+    background-color: #070d0fab;
     color: #fff;
     border: 2px double #04f5f5;
     padding: 10px;
     border-radius: 3rem;
-    height: 80px;
-    width: 220px;
+    height: 150px;
+    width: 200px;
     font-size: 14px;
     pointer-events: none; /* Para no bloquear botones */
     opacity: 0;
