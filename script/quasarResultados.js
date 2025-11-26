@@ -304,47 +304,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Expandir al contenido real (# contenido completo visible)
     container.style.height = 'auto';
 }
-function restoreContainerAfterPDF() {
-    const container = document.querySelector('.container');
-    if (!container) return;
+        function restoreContainerAfterPDF() {
+            const container = document.querySelector('.container');
+            if (!container) return;
 
-    container.style.height = container.dataset.originalHeight || '';
-}
-function showTooltipQuasar(event) {
-    let tooltip = document.getElementById('tooltipQuasar');
-    const SCCLink = document.getElementById('SCCLink');
+            container.style.height = container.dataset.originalHeight || '';
+        }
+        
+        function showTooltipQuasar(event) {
+            let tooltip = document.getElementById('tooltipQuasar');
+            const SCCLink = document.getElementById('SCCLink');
 
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'tooltipQuasar';
-        tooltip.classList.add('tooltipHtml2');
-        document.body.appendChild(tooltip);
-    }
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'tooltipQuasar';
+                tooltip.classList.add('tooltipHtml2');
+                document.body.appendChild(tooltip);
+            }
 
-    tooltip.innerHTML = `
-        <strong>Before you go...</strong><br>
-        Would you like to calculate your perfomance?<br>
-        <em>Click on "SCC" to do it.</em>
-    `;
+            tooltip.innerHTML = `
+                <strong>Before you go...</strong><br>
+                Would you like to calculate your perfomance?<br>
+                <em>Click on "SCC" to do it.</em>
+            `;
 
-    tooltip.style.left = `${event.pageX + 15}px`;
-    tooltip.style.top = `${event.pageY + 15}px`;
-    tooltip.style.opacity = 1;
+            tooltip.style.left = `${event.pageX + 15}px`;
+            tooltip.style.top = `${event.pageY + 15}px`;
+            tooltip.style.opacity = 1;
 
-    if (SCCLink) SCCLink.classList.add('highlight');
-}
+            if (SCCLink) SCCLink.classList.add('highlight');
+        }
 
-function hideTooltipQuasar() {
-    const tooltip = document.getElementById('tooltipQuasar');
-    const SCCLink = document.getElementById('SCCLink');
+        function hideTooltipQuasar() {
+            const tooltip = document.getElementById('tooltipQuasar');
+            const SCCLink = document.getElementById('SCCLink');
 
-    if (tooltip) tooltip.style.opacity = 0;
-    if (SCCLink) SCCLink.classList.remove('highlight');
-}
+            if (tooltip) tooltip.style.opacity = 0;
+            if (SCCLink) SCCLink.classList.remove('highlight');
+        }
 
-/* 🔥 Exponer las funciones globalmente */
-window.showTooltipQuasar = showTooltipQuasar;
-window.hideTooltipQuasar = hideTooltipQuasar;
+        /* 🔥 Exponer las funciones globalmente */
+        window.showTooltipQuasar = showTooltipQuasar;
+        window.hideTooltipQuasar = hideTooltipQuasar;
 
 
 
