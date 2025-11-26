@@ -362,11 +362,11 @@ function showTooltip2(event) {
                     try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e) { /*ignore*/ }
                     try { await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS); } catch(e) { /*ignore*/ }
                 }
-                window.location.href = './QUASAR.html';
+                window.location.href = './index.html';
             } catch (err) {
                 console.error('Error al regresar/limpiar datos:', err);
                 // aún así intentamos navegar
-                window.location.href = './QUASAR.html';
+                window.location.href = './index.html';
             }
         });
     }

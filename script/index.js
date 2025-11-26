@@ -5,15 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensaje = document.getElementById('mensaje');
     const resultadosDiv = document.getElementById('resultados'); // Div para mostrar resultados
 
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            mensaje.textContent = `Selected file: ${fileInput.files[0].name}`;
-            cargarBtn.disabled = false;
-        } else {
-            mensaje.textContent = '';
-            cargarBtn.disabled = true;
-        }
-    });
+    
 
     cargarBtn.addEventListener('click', async () => {
         const file = fileInput.files[0];
