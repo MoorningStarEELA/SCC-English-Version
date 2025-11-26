@@ -184,8 +184,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             tr.innerHTML = `
                 <td>${idx + 1}</td>
                 <td>${m.modelo}</td>
-                <td>${(m.flux).toFixed(3)} Lb</td>
-                <td>${(m.welding).toFixed(3)} gal</td>
+                <td>${(m.flux).toFixed(3)} gal</td>
+                <td>${(m.welding).toFixed(3)} Lb</td>
                 <td>${(m.rtv).toFixed(3)} g</td>
                 <td>${(m.uv).toFixed(3)} g</td>
                 <td>${(m.chemask).toFixed(3)} g</td>
@@ -216,8 +216,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // Rellenar datos mensuales en el panel "Data Summary Monthly"
-    if (elFluxData) elFluxData.textContent = `${totalsMensual.flux.toFixed(3)} Lb`;
-    if (elWeldingData) elWeldingData.textContent = `${totalsMensual.welding.toFixed(3)} gal`;
+    if (elFluxData) elFluxData.textContent = `${totalsMensual.flux.toFixed(3)} gal`;
+    if (elWeldingData) elWeldingData.textContent = `${totalsMensual.welding.toFixed(3)} Lb`;
     if (elRTVData) elRTVData.textContent = `${totalsMensual.rtv.toFixed(3)} g`;
     if (elUVData) elUVData.textContent = `${totalsMensual.uv.toFixed(3)} g`;
     if (elChemaskData) elChemaskData.textContent = `${totalsMensual.chemask.toFixed(3)} g`;
@@ -239,8 +239,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 }
 
-    llenarSemanas(elFluxW, semanal.flux,"Lb");
-    llenarSemanas(elWeldingW, semanal.welding,"gal");
+    llenarSemanas(elFluxW, semanal.flux,"gal");
+    llenarSemanas(elWeldingW, semanal.welding,"Lb");
     llenarSemanas(elRTVW, semanal.rtv,"g");
     llenarSemanas(elUVW, semanal.uv,"g");
     llenarSemanas(elChemaskW, semanal.chemask,"g");
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Welding (gal)', 'Flux (Lb)', 'RTV (g)', 'UV (g)', 'Chemask (g)'],
+                    labels: ['Welding (Lb)', 'Flux (gal)', 'RTV (g)', 'UV (g)', 'Chemask (g)'],
                     datasets: [{
                         label: `Consumo mensual (${mesActualNombre})`,
                         data: [
