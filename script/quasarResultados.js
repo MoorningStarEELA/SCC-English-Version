@@ -213,23 +213,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // También llenamos la sección "Top 10 Most Used Models per Month" (resumen semanal por química)
     // Calculamos totales mensuales por química (suma por todos los modelos)
-    const totalsMensual = capacidadData.reduce((acc, fila) => {
-
-            const weldingFactor = parseFloat(fila["Welding Usage Factor (Lb)"]) || 0;
-            const fluxFactor    = parseFloat(fila["Flux Utilization Factor (Gl)"]) || 0;
-            const rtvFactor     = parseFloat(fila["RTV Adhesives (g)"]) || 0;
-            const uvFactor      = parseFloat(fila["UV (g)"]) || 0;
-            const chemaskFactor = parseFloat(fila["Chemask (gr)"]) || 0;
-
-            acc.welding += weldingFactor;
-            acc.flux    += fluxFactor;
-            acc.rtv     += rtvFactor;
-            acc.uv      += uvFactor;
-            acc.chemask += chemaskFactor;
-
-            return acc;
-
-        }, { welding:0, flux:0, rtv:0, uv:0, chemask:0 });
+    const totalsMensual = {
+        welding: 0,
+        flux: 0,
+        rtv: 0,
+        uv: 0,
+        chemask: 0
+    };
+    consumoModelos.forEach(m => {
+        totalsMensual.welding += m.welding;
+        totalsMensual.flux += m.flux;
+        totalsMensual.rtv += m.rtv;
+        totalsMensual.uv += m.uv;
+        totalsMensual.chemask += m.chemask;
+    });
 
 
     // Rellenar datos mensuales en el panel "Data Summary Monthly"
@@ -277,7 +274,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'bar',
             data: {
                 // Etiqueta única en el eje X para este tipo de visualización (opcional, podrías dejarlo vacío)
-                labels: ['Consumo Total'], 
+                labels: ['Consumo Mensual'], 
                 datasets: [
                     {
                         label: 'Welding (Lb)',
@@ -321,7 +318,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 scales: {
                     y: { 
                         beginAtZero: true,
-                        type: 'logarithmic',
+                        type: 'linear',
+                        ticks: {
+                            stepSize: 10
+                        },
                         title: { display: true, text: 'Cantidad' } 
                     },
                     x: { 
