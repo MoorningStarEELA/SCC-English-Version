@@ -150,13 +150,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             // consumoIdeal = factor * demanda
             // consumoFinal = demanda * (factor + desperdicio)
            
-            const welding = demanda * (weldingFactor + (desperdicios.Welding || 0));
-            const flux = demanda * (fluxFactor + (desperdicios.Flux || 0));
-            const rtv = demanda * (rtvFactor + (desperdicios.rtv || 0));
-            const uv = demanda * (uvFactor + (desperdicios.uv || 0));
-            const chemask = demanda * (chemaskFactor + (desperdicios.chemask || 0));
+           //Consumo Real
+           const weldingIdeal = weldingFactor * demanda;
+           const fluxIdeal = fluxFactor * demanda;
+           const rtvIdeal = rtvFactor * demanda;
+           const uvIdeal = uvFactor * demanda;
+           const chemaskIdeal = chemaskFactor * demanda;
+
+
+           // Desperdicio como porcentaje %
+           const weldingDespe = weldingIdeal * (desperdicios.Welding / 100);
+           const fluxDespe = fluxIdeal * (desperdicios.Flux / 100);
+           const rtvDespe = rtvIdeal * (desperdicios.rtv / 100);
+           const uvDespe = uvIdeal * (desperdicios.uv / 100);
+           const chemaskDespe = chemaskIdeal * (desperdicios.chemask / 100);
+
+           // consumo final 
+           const welding = weldingIdeal + weldingDespe;
+           const flux = fluxIdeal + fluxDespe;
+           const rtv = rtvIdeal + rtvDespe;
+           const uv = uvIdeal + uvDespe;
+           const chemask = chemaskIdeal + chemaskDespe;
 
             const total = welding + flux + rtv + uv + chemask;
+            
 
             consumoModelos.push({
                 modelo: String(modelo),
@@ -247,50 +264,80 @@ document.addEventListener('DOMContentLoaded', async () => {
    
     // 5) Graficar consumo mensual por químico (barra)
    
-    try {
-        if (graficaCanvas) {
-            const ctx = graficaCanvas.getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Welding (Lb)', 'Flux (gal)', 'RTV (g)', 'UV (g)', 'Chemask (g)'],
-                    datasets: [{
-                        label: `Consumo mensual (${mesActualNombre})`,
-                        data: [
-                            totalsMensual.welding,
-                            totalsMensual.flux,
-                            totalsMensual.rtv,
-                            totalsMensual.uv,
-                            totalsMensual.chemask
-                        ],
-                        // NO fije colores si quieres respetar el estilo global; si quieres otro look los cambiamos
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)'
-                        ],
+   try {
+    if (graficaCanvas) {
+        const ctx = graficaCanvas.getContext('2d');
+        if (chartInstance) chartInstance.destroy();
+        
+        // **Nueva estructura de datos:** Las etiquetas (labels) se definen una sola vez
+        // y cada conjunto de datos (dataset) ahora solo tiene UN valor, 
+        // y se mapea directamente al color y la leyenda.
+        
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                // Etiqueta única en el eje X para este tipo de visualización (opcional, podrías dejarlo vacío)
+                labels: ['Consumo Total'], 
+                datasets: [
+                    {
+                        label: 'Welding (Lb)',
+                        data: [totalsMensual.welding], // El valor de welding se usa aquí
+                        backgroundColor: 'rgba(208, 235, 54, 0.7)',
+                        borderColor: 'rgba(255, 252, 252, 1)',
                         borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true },
-                        tooltip: { mode: 'index', intersect: false }
                     },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Cantidad' } },
-                        x: { title: { display: true, text: 'Químico' } }
+                    {
+                        label: 'Flux (gal)',
+                        data: [totalsMensual.flux],
+                        backgroundColor: 'rgba(54, 111, 235, 0.7)',
+                        borderColor: 'rgba(0, 5, 8, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Rtv (g)',
+                        data: [totalsMensual.rtv],
+                        backgroundColor: 'rgba(235, 54, 54, 0.7)',
+                        borderColor: 'rgba(192, 7, 7, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'UV (g)',
+                        data: [totalsMensual.uv],
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Chemask (g)',
+                        data: [totalsMensual.chemask],
+                        backgroundColor: 'rgba(7, 245, 39, 0.7)',
+                        borderColor: 'rgba(253, 246, 246, 1)',
+                        borderWidth: 1
                     }
-                }
-            });
-        }
-    } catch (err) {
-        console.error('Error creando la gráfica:', err);
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        type: 'logarithmic',
+                        title: { display: true, text: 'Cantidad' } 
+                    },
+                    x: { 
+                        // Se remueve el título si solo hay una categoría 'Consumo Total'
+                        // o podrías poner 'Material'
+                        title: { display: true, text: 'Material' } 
+                    }
+                },
+                // Esto es clave para mostrar las barras separadas por label
+                indexAxis: 'x', 
+            }
+        });
     }
+} catch (error) {
+    console.error("Error al generar la gráfica:", error);
+}
 
    
     // 6) Botón generar PDF (usa html2canvas + jsPDF similar a SCC)
@@ -343,7 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (SCCLink) SCCLink.classList.remove('highlight');
         }
 
-        /* 🔥 Exponer las funciones globalmente */
+        /*  Exponer las funciones globalmente */
         window.showTooltipQuasar = showTooltipQuasar;
         window.hideTooltipQuasar = hideTooltipQuasar;
 
