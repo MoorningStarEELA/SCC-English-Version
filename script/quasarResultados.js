@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const elUVW = [document.getElementById('uvW1'), document.getElementById('uvW2'), document.getElementById('uvW3'), document.getElementById('uvW4')];
     const elChemaskW = [document.getElementById('Chemaskw1'), document.getElementById('Chemaskw2'), document.getElementById('Chemaskw3'), document.getElementById('Chemaskw4')];
 
-    const top10TableBody = document.getElementById('top10TableBody'); // en tu html top10Tabla (sesiones semanales)
+    // en tu html top10Tabla (sesiones semanales) - optional
+    const top10TableBody = document.getElementById('top10TableBody');
     const top10ModelsBody = document.getElementById('top10ModelsBody');
     const graficaCanvas = document.getElementById('grafica');
 
@@ -23,58 +24,90 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let chartInstance = null;
 
-    // Nombres de meses en el formato que usa tu Excel/objetos
+    // Nombres de meses (en tu Excel están en ingles)
     const meses = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const ahora = new Date();
     const mesActualIndex = ahora.getMonth();
     const mesActualNombre = meses[mesActualIndex];
 
+    /* ===== UTILIDADES ===== */
+    function cleanNumber(n){
+        // limpia comas y espacios, soporta null/undefined
+        if(n === undefined || n === null) return 0;
+        const s = String(n).trim().replace(/\s+/g,'').replace(/,/g,'');
+        return parseFloat(s) || 0;
+    }
 
-    // 1) Leer desperdicios (STORE_QUASAR_DESPERDICIOS)
-   
+    function matchModel(row, modelo){
+        // intenta varios campos posibles de la fila de demanda
+        if(!row || !modelo) return false;
+        const campos = ["Part","part","Assembly","Assembly (Number)","Model","model"];
+        const mm = String(modelo).trim();
+        return campos.some(c => {
+            if(row[c] !== undefined && row[c] !== null){
+                return String(row[c]).trim() === mm;
+            }
+            return false;
+        });
+    }
+
+    function encontrarDemandaExacta(demandaFila, mes){
+        // DemandaFila puede tener keys con distintos formatos.
+        if(!demandaFila) return 0;
+        const keys = Object.keys(demandaFila);
+        const normalizedTarget = mes.toUpperCase().trim();
+
+        // 1) Intentar exact match (ignora mayúsculas/minúsculas y espacios)
+        let key = keys.find(k => k && k.toUpperCase().trim() === normalizedTarget);
+        if(key !== undefined) return cleanNumber(demandaFila[key]);
+
+        // 2) Intentar abreviatura (first 3 chars)
+        key = keys.find(k => k && k.toUpperCase().trim().slice(0,3) === normalizedTarget.slice(0,3));
+        if(key !== undefined) return cleanNumber(demandaFila[key]);
+
+        // 3) Intentar nombres alternativos (Nov, November, NOVEMBER) ya cubierto, si no -> 0
+        return 0;
+    }
+
+    /* ===== 1) Leer desperdicios (STORE_QUASAR_DESPERDICIOS) ===== */
+    // defecto 0%
     let desperdicios = { Flux: 0, Welding: 0, rtv: 0, uv: 0, chemask: 0 };
     try {
         const resp = await window.getAllDataFromIndexedDB(window.STORE_QUASAR_DESPERDICIOS);
         if (resp && resp.length > 0) {
-            // usamos la última entrada (índice 0 según tu patrón)
+            // Usamos la última entrada (índice 0 según tu patrón)
             const last = resp[0];
             desperdicios = {
-                Flux: parseFloat(last.Flux) || 0,
-                Welding: parseFloat(last.Welding) || 0,
-                rtv: parseFloat(last.rtv) || 0,
-                uv: parseFloat(last.uv) || 0,
-                chemask: parseFloat(last.chemask) || 0
+                Flux: cleanNumber(last.Flux),
+                Welding: cleanNumber(last.Welding),
+                rtv: cleanNumber(last.rtv),
+                uv: cleanNumber(last.uv),
+                chemask: cleanNumber(last.chemask)
             };
         } else {
-            // Si no hay datos, intentamos buscar en localStorage (por si quasar1 guardó info)
             try {
                 const ls = localStorage.getItem('QUASAR_Desperdicios');
                 if (ls) {
                     const obj = JSON.parse(ls);
                     desperdicios = {
-                        Flux: parseFloat(obj.Flux) || desperdicios.Flux,
-                        Welding: parseFloat(obj.Welding) || desperdicios.Welding,
-                        rtv: parseFloat(obj.rtv) || desperdicios.rtv,
-                        uv: parseFloat(obj.uv) || desperdicios.uv,
-                        chemask: parseFloat(obj.chemask) || desperdicios.chemask
+                        Flux: cleanNumber(obj.Flux),
+                        Welding: cleanNumber(obj.Welding),
+                        rtv: cleanNumber(obj.rtv),
+                        uv: cleanNumber(obj.uv),
+                        chemask: cleanNumber(obj.chemask)
                     };
                 }
-            } catch(e) { /* ignore */ }
+            } catch(e){ /* ignore */ }
         }
     } catch (error) {
         console.error('Error leyendo STORE_QUASAR_DESPERDICIOS:', error);
     }
 
-    // Mostrar desperdicios (si los quieres visibles)
-    if (elFluxData) elFluxData.textContent = desperdicios.Flux.toFixed(3);
-    if (elWeldingData) elWeldingData.textContent = desperdicios.Welding.toFixed(3);
-    if (elRTVData) elRTVData.textContent = desperdicios.rtv.toFixed(3);
-    if (elUVData) elUVData.textContent = desperdicios.uv.toFixed(3);
-    if (elChemaskData) elChemaskData.textContent = desperdicios.chemask.toFixed(3);
+    console.debug('Desperdicios leidos (porcentajes):', desperdicios);
+    // NOTA: No sobrescribimos los paneles mensuales con los porcentajes aquí. 
+    // Esos paneles deben mostrar totals mensuales, así que los llenaremos más abajo.
 
-
-    // 2) Leer demanda y datos de modelos (STORE_DEMANDA, STORE_INFORMACION, STORE_INFORMACION_QUASAR)
-
+    /* ===== 2) Leer demanda y datos de modelos ===== */
     let demandaData = [];
     let infoData = [];
     let infoQuasarData = [];
@@ -94,11 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         infoQuasarData = await window.getAllDataFromIndexedDB(window.STORE_INFORMACION_QUASAR) || [];
     } catch (e) {
-        // no crítico, puede no existir
         console.info('STORE_INFORMACION_QUASAR no disponible o vacio.');
     }
 
-    // Preferencia: si existe infoQuasarData (específico para QUASAR), lo uso; si no, uso infoData.
     const capacidadData = (infoQuasarData && infoQuasarData.length > 0) ? infoQuasarData : infoData;
 
     if (!demandaData || demandaData.length === 0) {
@@ -108,11 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn('No hay datos de capacidad (STORE_INFORMACION o STORE_INFORMACION_QUASAR).');
     }
 
-
-    // 3) Extraer factores por modelo y calcular consumo por modelo para el mes actual
-
-    // Buscamos columnas:
-    // "Welding Usage Factor (Lb)", "Flux Utilization Factor (Gl)", "RTV Adhesives (gr)", "UV (gr)", "Chemask (gr)"
+    /* ===== 3) Extraer factores por modelo y calcular consumo por modelo para el mes actual ===== */
     const keyWelding = 'Welding Usage Factor (Lb)';
     const keyFlux = 'Flux Utilization Factor (Gl)';
     const keyRTV = 'RTV Adhesives (g)';
@@ -127,58 +154,51 @@ document.addEventListener('DOMContentLoaded', async () => {
             const modelo = fila['Assembly (Number)'] || fila['Assembly'] || fila['Part'] || fila['Model'] || null;
             if (!modelo) return;
 
-            // Buscar la fila de demanda correspondiente (por columna Part en demandaData)
-            const demandaFila = demandaData.find(d => (d.Part && String(d.Part).trim() === String(modelo).trim()));
-            // Si no existe demanda para este modelo, lo ignoramos (puedes quitar esta restricción si quieres mostrar todos)
-            if (!demandaFila) return;
+            // Buscar la fila de demanda correspondiente (por columna Part u otros)
+            const demandaFila = demandaData.find(d => matchModel(d, modelo));
+            if (!demandaFila) {
+                // no hay demanda para este modelo: saltar
+                return;
+            }
 
-            // Obtener demanda del mes actual (limpiando comas)
-            const rawDemanda = demandaFila[mesActualNombre] ?? demandaFila[mesActualNombre.slice(0,3)] ?? 0;
-            const demanda = parseFloat(String(rawDemanda).replace(/,/g, '')) || 0;
+            // Obtener demanda del mes actual (soporta "January" o "Jan")
+            const demanda = encontrarDemandaExacta(demandaFila, mesActualNombre);
             if (demanda <= 0) return;
 
-            // Obtener factores (si no existen, tomar 0)
-            const weldingFactor = parseFloat(fila[keyWelding] ?? 0) || 0;
-            const fluxFactor = parseFloat(fila[keyFlux] ?? 0) || 0;
-            const rtvFactor = parseFloat(fila[keyRTV] ?? 0) || 0;
-            const uvFactor = parseFloat(fila[keyUV] ?? 0) || 0;
-            const chemaskFactor = parseFloat(fila[keyChemask] ?? 0) || 0;
+            // Obtener factores (limpiando comas)
+            const weldingFactor = cleanNumber(fila[keyWelding]);
+            const fluxFactor = cleanNumber(fila[keyFlux]);
+            const rtvFactor = cleanNumber(fila[keyRTV]);
+            const uvFactor = cleanNumber(fila[keyUV]);
+            const chemaskFactor = cleanNumber(fila[keyChemask]);
 
-           
-            // Interpretación del desperdicio :
-            // desperdicio guardado en 'desperdicios' es una CANTIDAD POR UNIDAD que se multiplica por la demanda.
-            // consumoIdeal = factor * demanda
-            // consumoFinal = demanda * (factor + desperdicio)
-           
-           //Consumo Real
-           const weldingIdeal = weldingFactor * demanda;
-           const fluxIdeal = fluxFactor * demanda;
-           const rtvIdeal = rtvFactor * demanda;
-           const uvIdeal = uvFactor * demanda;
-           const chemaskIdeal = chemaskFactor * demanda;
+            // Consumo ideal por modelo (factor * demanda)
+            const weldingIdeal = weldingFactor * demanda;
+            const fluxIdeal = fluxFactor * demanda;
+            const rtvIdeal = rtvFactor * demanda;
+            const uvIdeal = uvFactor * demanda;
+            const chemaskIdeal = chemaskFactor * demanda;
 
+            // Desperdicio: el usuario ingresa % (ej: 5 => 5%)
+            // Convertimos a decimal dividiendo entre 100 en la fórmula
+            const weldingDespe = weldingIdeal * (desperdicios.Welding / 100);
+            const fluxDespe = fluxIdeal * (desperdicios.Flux / 100);
+            const rtvDespe = rtvIdeal * (desperdicios.rtv / 100);
+            const uvDespe = uvIdeal * (desperdicios.uv / 100);
+            const chemaskDespe = chemaskIdeal * (desperdicios.chemask / 100);
 
-           // Desperdicio como porcentaje %
-           const weldingDespe = weldingIdeal * (desperdicios.Welding / 100);
-           const fluxDespe = fluxIdeal * (desperdicios.Flux / 100);
-           const rtvDespe = rtvIdeal * (desperdicios.rtv / 100);
-           const uvDespe = uvIdeal * (desperdicios.uv / 100);
-           const chemaskDespe = chemaskIdeal * (desperdicios.chemask / 100);
-
-           // consumo final 
-           const welding = weldingIdeal + weldingDespe;
-           const flux = fluxIdeal + fluxDespe;
-           const rtv = rtvIdeal + rtvDespe;
-           const uv = uvIdeal + uvDespe;
-           const chemask = chemaskIdeal + chemaskDespe;
+            // consumo final 
+            const welding = weldingIdeal + weldingDespe;
+            const flux = fluxIdeal + fluxDespe;
+            const rtv = rtvIdeal + rtvDespe;
+            const uv = uvIdeal + uvDespe;
+            const chemask = chemaskIdeal + chemaskDespe;
 
             const total = welding + flux + rtv + uv + chemask;
-            
 
             consumoModelos.push({
                 modelo: String(modelo),
                 welding, flux, rtv, uv, chemask, total, demanda,
-                // guardamos factores para mostrar tooltip si necesitas
                 weldingFactor, fluxFactor, rtvFactor, uvFactor, chemaskFactor
             });
         } catch (err) {
@@ -186,9 +206,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    console.debug('Modelos procesados:', consumoModelos.length);
 
-    // 4) Top 10 modelos por consumo total
-   
+    /* ===== 4) Top 10 modelos por consumo total ===== */
     const top10 = consumoModelos
         .sort((a,b) => b.total - a.total)
         .slice(0, 10);
@@ -211,23 +231,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // También llenamos la sección "Top 10 Most Used Models per Month" (resumen semanal por química)
-    // Calculamos totales mensuales por química (suma por todos los modelos)
-    const totalsMensual = {
-        welding: 0,
-        flux: 0,
-        rtv: 0,
-        uv: 0,
-        chemask: 0
-    };
-    consumoModelos.forEach(m => {
-        totalsMensual.welding += m.welding;
-        totalsMensual.flux += m.flux;
-        totalsMensual.rtv += m.rtv;
-        totalsMensual.uv += m.uv;
-        totalsMensual.chemask += m.chemask;
-    });
-
+    /* ===== Calcular totales mensuales (suma por todos los modelos procesados) ===== */
+    const totalsMensual = consumoModelos.reduce((acc, m) => {
+        acc.welding += m.welding;
+        acc.flux += m.flux;
+        acc.rtv += m.rtv;
+        acc.uv += m.uv;
+        acc.chemask += m.chemask;
+        return acc;
+    }, { welding:0, flux:0, rtv:0, uv:0, chemask:0 });
 
     // Rellenar datos mensuales en el panel "Data Summary Monthly"
     if (elFluxData) elFluxData.textContent = `${totalsMensual.flux.toFixed(3)} gal`;
@@ -247,161 +259,67 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Llenar celdas de semana (W1..W4)
     function llenarSemanas(celdaArray, valor, unidad) {
-    if (!celdaArray || !celdaArray.length) return;
-    for (let i = 0; i < 4; i++) {
-        if (celdaArray[i]) celdaArray[i].textContent = `${valor.toFixed(3)} ${unidad}`;
+        if (!celdaArray || !celdaArray.length) return;
+        for (let i = 0; i < 4; i++) {
+            if (celdaArray[i]) celdaArray[i].textContent = `${valor.toFixed(3)} ${unidad}`;
+        }
     }
-}
 
     llenarSemanas(elFluxW, semanal.flux,"gal");
     llenarSemanas(elWeldingW, semanal.welding,"Lb");
     llenarSemanas(elRTVW, semanal.rtv,"g");
     llenarSemanas(elUVW, semanal.uv,"g");
     llenarSemanas(elChemaskW, semanal.chemask,"g");
-   
-    // 5) Graficar consumo mensual por químico (barra)
-   
-   try {
-    if (graficaCanvas) {
-        const ctx = graficaCanvas.getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-        
-        // **Nueva estructura de datos:** Las etiquetas (labels) se definen una sola vez
-        // y cada conjunto de datos (dataset) ahora solo tiene UN valor, 
-        // y se mapea directamente al color y la leyenda.
-        
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                // Etiqueta única en el eje X para este tipo de visualización (opcional, podrías dejarlo vacío)
-                labels: ['Consumo Mensual'], 
-                datasets: [
-                    {
-                        label: 'Welding (Lb)',
-                        data: [totalsMensual.welding], // El valor de welding se usa aquí
-                        backgroundColor: 'rgba(208, 235, 54, 0.7)',
-                        borderColor: 'rgba(255, 252, 252, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Flux (gal)',
-                        data: [totalsMensual.flux],
-                        backgroundColor: 'rgba(54, 111, 235, 0.7)',
-                        borderColor: 'rgba(0, 5, 8, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Rtv (g)',
-                        data: [totalsMensual.rtv],
-                        backgroundColor: 'rgba(235, 54, 54, 0.7)',
-                        borderColor: 'rgba(192, 7, 7, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'UV (g)',
-                        data: [totalsMensual.uv],
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Chemask (g)',
-                        data: [totalsMensual.chemask],
-                        backgroundColor: 'rgba(7, 245, 39, 0.7)',
-                        borderColor: 'rgba(253, 246, 246, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { 
-                        beginAtZero: true,
-                        type: 'linear',
-                        ticks: {
-                            stepSize: 10
-                        },
-                        title: { display: true, text: 'Cantidad' } 
-                    },
-                    x: { 
-                        // Se remueve el título si solo hay una categoría 'Consumo Total'
-                        // o podrías poner 'Material'
-                        title: { display: true, text: 'Material' } 
-                    }
+
+    /* ===== 5) Graficar consumo mensual por químico (barra) ===== */
+    try {
+        if (graficaCanvas) {
+            const ctx = graficaCanvas.getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Consumo Mensual'],
+                    datasets: [
+                        { label: 'Welding (Lb)', data: [totalsMensual.welding], backgroundColor: 'rgba(208, 235, 54, 0.7)', borderWidth: 1 },
+                        { label: 'Flux (gal)', data: [totalsMensual.flux], backgroundColor: 'rgba(54, 111, 235, 0.7)', borderWidth: 1 },
+                        { label: 'Rtv (g)', data: [totalsMensual.rtv], backgroundColor: 'rgba(235, 54, 54, 0.7)', borderWidth: 1 },
+                        { label: 'UV (g)', data: [totalsMensual.uv], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderWidth: 1 },
+                        { label: 'Chemask (g)', data: [totalsMensual.chemask], backgroundColor: 'rgba(7, 245, 39, 0.7)', borderWidth: 1 }
+                    ]
                 },
-                // Esto es clave para mostrar las barras separadas por label
-                indexAxis: 'x', 
-            }
-        });
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Cantidad' } },
+                        x: { title: { display: true, text: 'Material' } }
+                    },
+                    indexAxis: 'x',
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error al generar la gráfica:", error);
     }
-} catch (error) {
-    console.error("Error al generar la gráfica:", error);
-}
 
-   
-    // 6) Botón generar PDF (usa html2canvas + jsPDF similar a SCC)
-   function expandContainerForPDF() {
-    const container = document.querySelector('.container');
-    if (!container) return;
+    /* ===== 6) Botón generar PDF ===== */
+    function expandContainerForPDF() {
+        const container = document.querySelector('.container');
+        if (!container) return;
+        container.dataset.originalHeight = container.style.height;
+        container.style.height = 'auto';
+    }
+    function restoreContainerAfterPDF() {
+        const container = document.querySelector('.container');
+        if (!container) return;
+        container.style.height = container.dataset.originalHeight || '';
+    }
 
-    // Guardar altura original
-    container.dataset.originalHeight = container.style.height;
-
-    // Expandir al contenido real (# contenido completo visible)
-    container.style.height = 'auto';
-}
-        function restoreContainerAfterPDF() {
-            const container = document.querySelector('.container');
-            if (!container) return;
-
-            container.style.height = container.dataset.originalHeight || '';
-        }
-        
-        function showTooltipQuasar(event) {
-            let tooltip = document.getElementById('tooltipQuasar');
-            const SCCLink = document.getElementById('SCCLink');
-
-            if (!tooltip) {
-                tooltip = document.createElement('div');
-                tooltip.id = 'tooltipQuasar';
-                tooltip.classList.add('tooltipHtml2');
-                document.body.appendChild(tooltip);
-            }
-
-            tooltip.innerHTML = `
-                <strong>Before you go...</strong><br>
-                Remember that the data will be deleted.<br>
-                <em>Do you want to continue?</em>
-            `;
-
-            tooltip.style.left = `${event.pageX + 15}px`;
-            tooltip.style.top = `${event.pageY + 15}px`;
-            tooltip.style.opacity = 1;
-
-            if (SCCLink) SCCLink.classList.add('highlight');
-        }
-
-        function hideTooltipQuasar() {
-            const tooltip = document.getElementById('tooltipQuasar');
-            const SCCLink = document.getElementById('SCCLink');
-
-            if (tooltip) tooltip.style.opacity = 0;
-            if (SCCLink) SCCLink.classList.remove('highlight');
-        }
-
-        /*  Exponer las funciones globalmente */
-        window.showTooltipQuasar = showTooltipQuasar;
-        window.hideTooltipQuasar = hideTooltipQuasar;
-
-
-
-   
     if (btnPDF) {
         btnPDF.addEventListener('click', async () => {
             btnPDF.style.display = 'none';
             if (btnRegresar) btnRegresar.style.display = 'none';
-
             try {
                 expandContainerForPDF();
                 const { jsPDF } = window.jspdf;
@@ -430,13 +348,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // 7) Botón regresar: limpiar stores relevantes y volver a Inicio.html 
+    /* ===== Tooltips: mostrar / ocultar ===== */
+    function showTooltipQuasar(event) {
+        let tooltip = document.getElementById('tooltipQuasar');
+        const SCCLink = document.getElementById('SCCLink');
 
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'tooltipQuasar';
+            tooltip.classList.add('tooltipHtml2');
+            document.body.appendChild(tooltip);
+        }
+
+        tooltip.innerHTML = `
+            <strong>Before you go...</strong><br>
+            Remember that the data will be deleted.<br>
+            <em>Do you want to continue?</em>
+        `;
+
+        tooltip.style.left = `${event.pageX + 15}px`;
+        tooltip.style.top = `${event.pageY + 15}px`;
+        tooltip.style.opacity = 1;
+
+        if (SCCLink) SCCLink.classList.add('highlight');
+    }
+
+    function hideTooltipQuasar() {
+        const tooltip = document.getElementById('tooltipQuasar');
+        const SCCLink = document.getElementById('SCCLink');
+
+        if (tooltip) tooltip.style.opacity = 0;
+        if (SCCLink) SCCLink.classList.remove('highlight');
+    }
+
+    /* Exponer funciones globales para onmouseover inline y debugging */
+    window.showTooltipQuasar = showTooltipQuasar;
+    window.hideTooltipQuasar = hideTooltipQuasar;
+
+    /* ===== 7) Botón regresar: limpiar stores relevantes y volver a Inicio.html ===== */
     if (btnRegresar) {
         btnRegresar.addEventListener('click', async () => {
             try {
-                // NO borraremos STORE_INFORMACION ni STORE_INFORMACION_QUASAR (son datos de catálogo),
-                // pero sí borramos DEMANDA temporal y respuestas del cuestionario si quieres.
                 if (window.clearObjectStore) {
                     try { await window.clearObjectStore(window.STORE_DEMANDA); } catch(e) { /*ignore*/ }
                     try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e) { /*ignore*/ }
@@ -445,23 +397,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = './index.html';
             } catch (err) {
                 console.error('Error al regresar/limpiar datos:', err);
-                // aún así intentamos navegar
                 window.location.href = './index.html';
             }
         });
     }
 
-
-    // 8) Si no hay modelos con demanda, mostrar mensaje en tablas (opcional)
-
+    /* ===== 8) Mensajes si no hay modelos ===== */
     if (consumoModelos.length === 0) {
         if (top10ModelsBody) {
             top10ModelsBody.innerHTML = `<tr><td colspan="8">No hay modelos con demanda para ${mesActualNombre}.</td></tr>`;
         }
-        if (top10TableBody) {
-            // mantener la tabla de semanas, ya se llenó con '-'
-        }
     }
 
-    // Fin DOMContentLoaded
-});
+    /* Para debugging rápido: muestra un resumen en consola */
+    console.info(`QUASAR result ready — month: ${mesActualNombre}. Modelos procesados: ${consumoModelos.length}. Totales:`, totalsMensual);
+
+}); // Fin DOMContentLoaded

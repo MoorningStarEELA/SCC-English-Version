@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Flux: parseFloat(formDataDesperdicios.get('Flux')),
             Welding: parseFloat(formDataDesperdicios.get('Welding')),
             rtv: parseFloat(formDataDesperdicios.get('rtv')),
-            uv: parseFloat(formDataDesperdicios.get('uv')),
+            uv: parseFloat(formDataDesperdicios.get('UV')),
             chemask: parseFloat(formDataDesperdicios.get('chemask')),
             timestamp: new Date().toISOString()
         };
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error saving waste data:", error);
-            mensaje.textContent = "Error saving data ❌";
+            mensaje.textContent = "Error saving data ";
         }
     });
 
