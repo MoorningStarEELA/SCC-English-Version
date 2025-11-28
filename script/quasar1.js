@@ -25,9 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const columnasbuscadas = capacidadData.map(item => ({
             weldingUsage: item["Welding Usage Factor (Lb)"] || 0,
             fluxUtilization: item["Flux Utilization Factor (Gl)"] || 0,
-            rtv: item["RTV Adhesives (g)"] || 0,
-            UV_Utilization: item["UV (g)"] || 0,
-            chemask: item["Chemask (gr)"] || 0
+            chemical1: item["Chemical 1"] || 0,
+            chemical2: item["Chemical 2"] || 0,
+            chemical3: item["Chemical 3"] ||0,
+            chemical4: item["Chemical 4"] || 0
+
         }));
 
         console.log('Columnas buscadas para cálculos:', columnasbuscadas);
