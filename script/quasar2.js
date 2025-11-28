@@ -7,21 +7,31 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         mensaje.textContent = 'Saving data...';
 
-        const formDataDesperdicios = new FormData(form);
+        const fd = new FormData(form);
 
-        const formAnswersDesperdicios = {
-            Flux: parseFloat(formDataDesperdicios.get('Flux')),
-            Welding: parseFloat(formDataDesperdicios.get('Welding')),
-            rtv: parseFloat(formDataDesperdicios.get('rtv')),
-            uv: parseFloat(formDataDesperdicios.get('UV')),
-            chemask: parseFloat(formDataDesperdicios.get('chemask')),
+        const data = {
+            Flux: parseFloat(fd.get('Flux')),
+            Welding: parseFloat(fd.get('Welding')),
+
+            // Nombres de los químicos personalizados
+            nameCh1: fd.get("PctCh1"),
+            nameCh2: fd.get("PctCh2"),
+            nameCh3: fd.get("PctCh3"),
+            nameCh4: fd.get("PctCh4"),
+
+            // Porcentajes ingresados
+            chem1Pct: parseFloat(fd.get("Chem1Pct")),
+            chem2Pct: parseFloat(fd.get("Chem2Pct")),
+            chem3Pct: parseFloat(fd.get("Chem3Pct")),
+            chem4Pct: parseFloat(fd.get("Chem4Pct")),
+
             timestamp: new Date().toISOString()
         };
 
         try {
             await addDataToIndexedDB(
                 window.STORE_QUASAR_DESPERDICIOS,
-                [formAnswersDesperdicios]  //  ENVÍA ARREGLO, NO OBJETO
+                [data]
             );
 
             mensaje.textContent = "Data saved successfully. Redirecting...";
