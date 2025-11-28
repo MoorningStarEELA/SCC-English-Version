@@ -57,14 +57,36 @@
                     <label for="Solder">Enter your Solder waste percentage</label>
                     <input type="number" id="Welding" name="Welding" class="form-control" required>
 
-                    <label for="rtv">Enter your RTV waste percentage</label>
-                    <input type="number" id="rtv" name="rtv" class="form-control" required>
+                    <label for="percentageCh1" id="labelCh1Pct">Enter the name Chemical 1 </label>
+                    <input type="text" id="PctCh1" name="PctCh1" class="form-control" required>
 
-                    <label for="UV">Enter your UV waste percentage</label>
-                    <input type="number" id="UV" name="UV" class="form-control" required>
+                   <div id="chemical1-section">
+                        <label id="chem1-label">Enter your Chemical 1 percentage</label>
+                        <input type="number" id="Chem1Pct" name="Chem1Pct" class="form-control" required>
+                    </div>
 
-                    <label for="chemask">Enter your Chemask waste percentage</label>
-                    <input type="number" id="chemask" name="chemask" class="form-control" required>
+                    <label for="nameChemical2">Enter the name Chemical 2</label>
+                    <input type="text" id="PctCh2" name="PctCh2" class="form-control" required>
+
+                    <div id="chemical2-section">
+                        <label id="chem2-label"> Enter your Chemical 2 percentage</label>
+                        <input type="number" id="Chem2Pct" name="Chem2Pct" class="form-control" required>
+                    </div>
+
+                    <label for="rtv">Enter the name Chemical 3</label>
+                    <input type="text" id="PctCh3" name="PctCh3" class="form-control" required>
+
+                    <div id="chemical3-section">
+                        <label id="chem3-label"> Enter your Chemical 3 percentage</label>
+                        <input type="number" id="Chem3Pct" name="Chem3Pct" class="form-control" required>
+                    </div>
+
+                    <label for="UV">Enter the name Chemical 4</label>
+                    <input type="text" id="PctCh4" name="PctCh4" class="form-control" required>
+
+                    <div id="chemical4-section">
+                        <label id="chem4-label"> Enter your Chemical 4 percentage</label>
+                        <input type="number" id="Chem4Pct" name="Chem4Pct" class="form-control" required>
 
                 </div>
                 
@@ -84,6 +106,62 @@
 
     <script src="./script/db.js"></script>
     <script src="./script/quasar2.js"></script>
+    <script>
+        // Obtener referencias a los elementos DEL primer quimico
+        const nameCh1Input = document.getElementById('PctCh1');
+        const labelCh1Pct = document.getElementById('chemical1-section');
+        const chem1Label = document.getElementById('chem1-label');
+        // Obtener referencias a los elementos DEL Segundo quimico
+        const nameCh2Input = document.getElementById('PctCh2');
+        const labelCh2Pct = document.getElementById('chemical2-section');
+        const chem2Label = document.getElementById('chem2-label');
+        // obtener referencias a los elementos DEL Tercer quimico
+        const nameCh3Input = document.getElementById('PctCh3');
+        const labelCh3Pct = document.getElementById('chemical3-section');
+        const chem3Label = document.getElementById('chem3-label');
+
+        //obtener referencias a los elementos DEL Cuarto quimico
+        const nameCh4Input = document.getElementById('PctCh4');
+        const labelCh4Pct = document.getElementById('chemical4-section');
+        const chem4Label = document.getElementById('chem4-label');
+
+        nameCh1Input.addEventListener("input", () => {
+        const name = nameCh1Input.value.trim();
+
+        if (name === "") {
+            chem1Label.textContent = "Enter your Chemical1 percentage";
+        } else {
+            chem1Label.textContent = `Enter your ${name} percentage`;
+        }
+    });
+        nameCh2Input.addEventListener("input", () => {
+            const name = nameCh2Input.value.trim();
+
+            if (name === "") {
+                chem2Label.textContent = "Enter your Chemical2 percentage";
+            } else {
+                chem2Label.textContent = `Enter your ${name} percentage`;
+            }
+        });
+        nameCh3Input.addEventListener("input", () => {
+            const name = nameCh3Input.value.trim();
+
+            if (name === "") {
+                chem3Label.textContent = "Enter your Chemical3 percentage";
+            } else {
+                chem3Label.textContent = `Enter your ${name} percentage`;
+            }
+        });
+        nameCh4Input.addEventListener("input", () => {
+            const name = nameCh4Input.value.trim();
+
+            if (name === "") {
+                chem4Label.textContent = "Enter your Chemical4 percentage";
+            } else {
+                chem4Label.textContent = `Enter your ${name} percentage`;
+            }
+        });
+</script>
     
     
 </body>
