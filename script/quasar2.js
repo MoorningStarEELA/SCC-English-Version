@@ -9,21 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const fd = new FormData(form);
 
+        const nameCh4 = fd.get("PctCh4").trim();
+        const unitCh4 = fd.get("Chem4Unit").trim();
+
         const data = {
+            // químicos base
             Flux: parseFloat(fd.get('Flux')),
             Welding: parseFloat(fd.get('Welding')),
 
-            // Nombres de los químicos personalizados
-            nameCh1: fd.get("PctCh1"),
-            nameCh2: fd.get("PctCh2"),
-            nameCh3: fd.get("PctCh3"),
-            nameCh4: fd.get("PctCh4"),
+            // nombres
+            nameCh1: fd.get("PctCh1").trim(),
+            nameCh2: fd.get("PctCh2").trim(),
+            nameCh3: fd.get("PctCh3").trim(),
+            nameCh4: nameCh4 !== "" ? nameCh4 : null,
 
-            // Porcentajes ingresados
+            // porcentajes
             chem1Pct: parseFloat(fd.get("Chem1Pct")),
             chem2Pct: parseFloat(fd.get("Chem2Pct")),
             chem3Pct: parseFloat(fd.get("Chem3Pct")),
-            chem4Pct: parseFloat(fd.get("Chem4Pct")),
+            chem4Pct: nameCh4 !== "" ? parseFloat(fd.get("Chem4Pct")) : null,
+
+            // unidades
+            unitCh1: fd.get("Chem1Unit"),
+            unitCh2: fd.get("Chem2Unit"),
+            unitCh3: fd.get("Chem3Unit"),
+            unitCh4: nameCh4 !== "" ? unitCh4 : null,
 
             timestamp: new Date().toISOString()
         };
