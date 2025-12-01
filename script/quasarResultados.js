@@ -1,11 +1,17 @@
-// ================== QUASAR RESULTADOS — NUEVA VERSIÓN ==================
+// ================== QUASAR RESULTADOS — VERSIÓN FINAL ==================
 document.addEventListener('DOMContentLoaded', async () => {
+
+    /* ==========================================================
+       0) BOTONES NECESARIOS
+    ========================================================== */
+
+    const btnPDF = document.getElementById('generarPDF');
+    const btnRegresar = document.getElementById('regresarBtn');
 
     /* ==========================================================
        1) CAPTURAR ELEMENTOS DEL HTML
     ========================================================== */
 
-    // --- Resumen mensual ---
     const elFluxData = document.getElementById('FluxData');
     const elWeldingData = document.getElementById('WeldingData');
 
@@ -14,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const elChem3Data = document.getElementById('Chem3Data');
     const elChem4Data = document.getElementById('Chem4Data');
 
-    // --- Etiquetas dinámicas ---
     const lblCh1 = document.getElementById('nameCh1Label');
     const lblCh2 = document.getElementById('nameCh2Label');
     const lblCh3 = document.getElementById('nameCh3Label');
@@ -30,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const colCh3 = document.getElementById('nameCh3Col');
     const colCh4 = document.getElementById('nameCh4Col');
 
-    // --- Semanal ---
     const elFluxW = document.getElementById('FluxW1');
     const elWeldingW = document.getElementById('weldingW1');
 
@@ -47,13 +51,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ==========================================================
        2) UTILIDADES
     ========================================================== */
+
     function cleanNumber(n) {
         if (n === undefined || n === null) return 0;
         return parseFloat(String(n).replace(/,/g, '').trim()) || 0;
     }
 
+    const meses = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const mesActualNombre = meses[(new Date()).getMonth()];
+
     /* ==========================================================
-       3) LEER DATOS DE FORMULARIO (NUESTROS QUÍMICOS)
+       3) LEER QUÍMICOS GUARDADOS
     ========================================================== */
 
     let Q = {
@@ -78,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         const saved = await window.getAllDataFromIndexedDB(window.STORE_QUASAR_DESPERDICIOS);
+
         if (saved && saved.length > 0) {
             const d = saved[0];
 
@@ -103,7 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error leyendo químicos:", e);
     }
 
-    /* Asignar nombres dinámicos en las etiquetas */
+    /* Asignar nombres dinámicos */
     lblCh1.textContent = `${Q.nameCh1} Data`;
     lblCh2.textContent = `${Q.nameCh2} Data`;
     lblCh3.textContent = `${Q.nameCh3} Data`;
@@ -129,34 +138,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ==========================================================
-       4) LEER DEMANDA Y CAPACIDAD DEL MODELO
+       4) LEER DEMANDA Y CAPACIDAD
     ========================================================== */
 
     let demandaData = await window.getAllDataFromIndexedDB(window.STORE_DEMANDA) || [];
     let capacidadData = await window.getAllDataFromIndexedDB(window.STORE_INFORMACION) || [];
-
-    const meses = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const mesActual = meses[(new Date()).getMonth()];
 
     function matchModel(row, model) {
         const campos = ["Part","Assembly","Assembly (Number)","Model"];
         return campos.some(c => row[c] && String(row[c]).trim() === String(model).trim());
     }
 
-    function buscarDemandaFila(model) {
-        return demandaData.find(d => matchModel(d, model));
-    }
-
     function extraerDemandaMes(row) {
         if (!row) return 0;
         const keys = Object.keys(row);
-        const target = mesActual.toUpperCase();
+        const target = mesActualNombre.toUpperCase();
         const found = keys.find(k => k.toUpperCase() === target);
         return cleanNumber(found ? row[found] : 0);
     }
 
     /* ==========================================================
-       5) PROCESAR MODELOS
+       5) PROCESO DE CONSUMO
     ========================================================== */
 
     const consumoModelos = [];
@@ -165,36 +167,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         const modelo = fila["Assembly (Number)"] || fila["Assembly"] || fila["Part"] || fila["Model"];
         if (!modelo) return;
 
-        const demandaFila = buscarDemandaFila(modelo);
+        const demandaFila = demandaData.find(d => matchModel(d, modelo));
         if (!demandaFila) return;
 
         const demanda = extraerDemandaMes(demandaFila);
         if (demanda <= 0) return;
 
-        // FACTORES SEGÚN HEADERS NUEVOS
         const chem1F = cleanNumber(fila["Chemical 1"]);
         const chem2F = cleanNumber(fila["Chemical 2"]);
         const chem3F = cleanNumber(fila["Chemical 3"]);
-        const fluxF  = cleanNumber(fila["Flux Utilization Factor (Gl)"]);
-        const weldF  = cleanNumber(fila["Welding Usage Factor (Lb)"]);
-
         const chem4F = Q.nameCh4 ? cleanNumber(fila["Chemical 4"]) : 0;
 
-        // IDEAL
+        const fluxF = cleanNumber(fila["Flux Utilization Factor (Gl)"]);
+        const weldF = cleanNumber(fila["Welding Usage Factor (Lb)"]);
+
         const chem1Ideal = chem1F * demanda;
         const chem2Ideal = chem2F * demanda;
         const chem3Ideal = chem3F * demanda;
-        const fluxIdeal  = fluxF * demanda;
-        const weldIdeal  = weldF * demanda;
         const chem4Ideal = Q.nameCh4 ? chem4F * demanda : 0;
 
-        // APLICAR DESPERDICIO %
+        const fluxIdeal = fluxF * demanda;
+        const weldIdeal = weldF * demanda;
+
         const chem1 = chem1Ideal + chem1Ideal * (Q.chem1Pct / 100);
         const chem2 = chem2Ideal + chem2Ideal * (Q.chem2Pct / 100);
         const chem3 = chem3Ideal + chem3Ideal * (Q.chem3Pct / 100);
+        const chem4 = Q.nameCh4 ? chem4Ideal + chem4Ideal * (Q.chem4Pct / 100) : 0;
+
         const flux  = fluxIdeal  + fluxIdeal  * (Q.Flux / 100);
         const weld  = weldIdeal  + weldIdeal  * (Q.Welding / 100);
-        const chem4 = Q.nameCh4 ? chem4Ideal + chem4Ideal * (Q.chem4Pct / 100) : 0;
 
         consumoModelos.push({
             modelo,
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     /* ==========================================================
-       7) TOTALES MENSUALES
+       7) TOTALES
     ========================================================== */
 
     const totals = consumoModelos.reduce((acc,m) => {
@@ -244,34 +245,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         return acc;
     }, {flux:0, weld:0, chem1:0, chem2:0, chem3:0, chem4:0});
 
+    // Mensual
     elFluxData.textContent = `${totals.flux.toFixed(3)} gal`;
     elWeldingData.textContent = `${totals.weld.toFixed(3)} Lb`;
 
     elChem1Data.textContent = `${totals.chem1.toFixed(3)} ${Q.unitCh1}`;
     elChem2Data.textContent = `${totals.chem2.toFixed(3)} ${Q.unitCh2}`;
     elChem3Data.textContent = `${totals.chem3.toFixed(3)} ${Q.unitCh3}`;
+    if (Q.nameCh4) elChem4Data.textContent = `${totals.chem4.toFixed(3)} ${Q.unitCh4}`;
 
-    if (Q.nameCh4) {
-        elChem4Data.textContent = `${totals.chem4.toFixed(3)} ${Q.unitCh4}`;
-    }
-
-    /* ==========================================================
-       8) TOTALES SEMANALES
-    ========================================================== */
-
+    // Semanal
     elFluxW.textContent = `${(totals.flux/4).toFixed(3)} gal`;
     elWeldingW.textContent = `${(totals.weld/4).toFixed(3)} Lb`;
-
     elChem1W.textContent = `${(totals.chem1/4).toFixed(3)} ${Q.unitCh1}`;
     elChem2W.textContent = `${(totals.chem2/4).toFixed(3)} ${Q.unitCh2}`;
     elChem3W.textContent = `${(totals.chem3/4).toFixed(3)} ${Q.unitCh3}`;
+    if (Q.nameCh4) elChem4W.textContent = `${(totals.chem4/4).toFixed(3)} ${Q.unitCh4}`;
 
-    if (Q.nameCh4) {
-        elChem4W.textContent = `${(totals.chem4/4).toFixed(3)} ${Q.unitCh4}`;
-    }
 
     /* ==========================================================
-       9) GRAFICA
+       8) GRAFICA
     ========================================================== */
 
     const ctx = graficaCanvas.getContext("2d");
@@ -298,105 +291,112 @@ document.addEventListener('DOMContentLoaded', async () => {
         options:{ responsive:true }
     });
 
+
     /* ==========================================================
-       10) PDF Y REGRESAR (igual que tu versión actual)
+       9) PDF
     ========================================================== */
 
-   function expandContainerForPDF() {
+    function expandContainerForPDF() {
         const container = document.querySelector('.container');
         if (!container) return;
         container.dataset.originalHeight = container.style.height;
         container.style.height = 'auto';
     }
-        function restoreContainerAfterPDF() {
-            const container = document.querySelector('.container');
-            if (!container) return;
-            container.style.height = container.dataset.originalHeight || '';
-        }
 
-if (generarPDF) {
-    generarPDF.addEventListener('click', async () => {
-        generarPDF.style.display = 'none';
-        if (btnRegresar) btnRegresar.style.display = 'none';
-        try {
-            expandContainerForPDF();
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'pt', 'letter');
-            const content = document.querySelector('.container') || document.body;
-            const canvas = await html2canvas(content, { scale: 2, useCORS: true });
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const imgProps = doc.getImageProperties(imgData);
-            const pdfWidth = doc.internal.pageSize.getWidth();
-            const margin = 20;
-            const imgDisplayWidth = pdfWidth - 2 * margin;
-            const imgDisplayHeight = (imgProps.height * imgDisplayWidth) / imgProps.width;
+    function restoreContainerAfterPDF() {
+        const container = document.querySelector('.container');
+        if (!container) return;
+        container.style.height = container.dataset.originalHeight || '';
+    }
 
-            let position = 40;
-            doc.setFontSize(20);
-            doc.text('QUASAR Monthly Report', pdfWidth / 2, 30, { align: 'center' });
-            doc.addImage(imgData, 'JPEG', margin, position, imgDisplayWidth, imgDisplayHeight);
-            doc.save(`QUASAR_Report_${mesActualNombre}_${new Date().toISOString().slice(0,10)}.pdf`);
-        } catch (e) {
-            console.error('Error generando PDF:', e);
-        } finally {
-            restoreContainerAfterPDF();
-            generarPDF.style.display = 'inline-block';
-            if (btnRegresar) btnRegresar.style.display = 'inline-block';
-        }
-    });
+    if (btnPDF) {
+        btnPDF.addEventListener('click', async () => {
+            btnPDF.style.display = 'none';
+            btnRegresar.style.display = 'none';
 
-}
-    
-// TOOLTIP para mostrar el mensaje emergente//
-function showTooltipQuasar(event){
-    let tooltip = document.getElementById('tooltipQuasar');
-    const SCCLink = document.getElementById('SCCLink;');
+            try {
+                expandContainerForPDF();
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'pt', 'letter');
+                const content = document.querySelector('.container');
 
-    if(!tooltip){
-        tooltip = document.createElement('div');
-        tooltip.id = 'tooltipQuasar';
-        tooltip.classList.add('tooltipHtml2');
-        document.body.appendChild(tooltip);
+                const canvas = await html2canvas(content, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const imgProps = doc.getImageProperties(imgData);
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const margin = 20;
+                const imgDisplayWidth = pdfWidth - 2 * margin;
+                const imgDisplayHeight = (imgProps.height * imgDisplayWidth) / imgProps.width;
 
-    } 
-    tooltip.innetHTML=`
-        <strong>Before you go...</strong><br>
-        Remember that the data will be deleted.<br>
-        <em>Do you want to continue?</em>
-    `;
-    tooltip.style.left = `${event.pageX + 15}px`;
-    tooltip.style.top = `${event.pageY + 15}px`;
-    tooltip.style.opacity = 1;
+                doc.setFontSize(20);
+                doc.text('QUASAR Monthly Report', pdfWidth / 2, 30, { align: 'center' });
+                doc.addImage(imgData, 'JPEG', margin, 40, imgDisplayWidth, imgDisplayHeight);
 
-    if (SCCLink) SCCLink.classList.add('highlight');
-}
-function hideTooltipQuasar(){
-    const tooltip = document.getElementById('tooltioQuasar');
-    const SCCLink = document.getElementById('SCCLink');
-
-    if(tooltip) tooltip.style.opacity = 0;
-    if (SCCLink) SCCLink.classList.remove('highlight');
-
-}
- window.showTooltipQuasa = showTooltipQuasar ;
- window.hideTooltipQuasar = hideTooltipQuasar;
-
- // boton de regresar 
- if(regresarBtn) {
-    regresarBtn.addEventListener('click', async ()=> {
-        try{
-            if(window.clearObjectStore){
-                try{await window.clearObjectStore(window.STORE_DEMANDA);} catch(e){}
-                try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e){}
-                try { await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS); } catch(e){}
-                
+                doc.save(`QUASAR_Report_${mesActualNombre}.pdf`);
+            } catch (e) {
+                console.error('Error generando PDF:', e);
+            } finally {
+                restoreContainerAfterPDF();
+                btnPDF.style.display = 'inline-block';
+                btnRegresar.style.display = 'inline-block';
             }
-            window.location.href= './index.html';
-        }catch(err){}
-    })
- }
-        
-    
+        });
+    }
+
+    /* ==========================================================
+       10) TOOLTIP
+    ========================================================== */
+
+    window.showTooltipQuasar = function(event) {
+        let tooltip = document.getElementById('tooltipQuasar');
+        const SCCLink = document.getElementById('SCCLink');
+
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'tooltipQuasar';
+            tooltip.classList.add('tooltipHtml2');
+            document.body.appendChild(tooltip);
+        }
+
+        tooltip.innerHTML = `
+            <strong>Before you go...</strong><br>
+            Remember that the data will be deleted.<br>
+            <em>Do you want to continue?</em>
+        `;
+
+        tooltip.style.left = `${event.pageX + 15}px`;
+        tooltip.style.top = `${event.pageY + 15}px`;
+        tooltip.style.opacity = 1;
+
+        if (SCCLink) SCCLink.classList.add('highlight');
+    };
+
+    window.hideTooltipQuasar = function() {
+        const tooltip = document.getElementById('tooltipQuasar');
+        const SCCLink = document.getElementById('SCCLink');
+
+        if (tooltip) tooltip.style.opacity = 0;
+        if (SCCLink) SCCLink.classList.remove('highlight');
+    };
 
 
-});
+    /* ==========================================================
+       11) BOTÓN REGRESAR
+    ========================================================== */
+
+    if (btnRegresar) {
+        btnRegresar.addEventListener('click', async () => {
+            try {
+                if (window.clearObjectStore) {
+                    await window.clearObjectStore(window.STORE_DEMANDA);
+                    await window.clearObjectStore(window.STORE_FORM_ADICIONAL);
+                    await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS);
+                }
+                window.location.href = './index.html';
+            } catch (err) {
+                window.location.href = './index.html';
+            }
+        });
+    }
+
+}); // FIN DOMContentLoaded
