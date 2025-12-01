@@ -314,9 +314,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             container.style.height = container.dataset.originalHeight || '';
         }
 
-if (btnPDF) {
-    btnPDF.addEventListener('click', async () => {
-        btnPDF.style.display = 'none';
+if (generarPDF) {
+    generarPDF.addEventListener('click', async () => {
+        generarPDF.style.display = 'none';
         if (btnRegresar) btnRegresar.style.display = 'none';
         try {
             expandContainerForPDF();
@@ -340,7 +340,7 @@ if (btnPDF) {
             console.error('Error generando PDF:', e);
         } finally {
             restoreContainerAfterPDF();
-            btnPDF.style.display = 'inline-block';
+            generarPDF.style.display = 'inline-block';
             if (btnRegresar) btnRegresar.style.display = 'inline-block';
         }
     });
@@ -382,20 +382,17 @@ function hideTooltipQuasar(){
  window.hideTooltipQuasar = hideTooltipQuasar;
 
  // boton de regresar 
- if(btnRegresar) {
-    btnRegresar.addEventListener('click', async ()=> {
+ if(regresarBtn) {
+    regresarBtn.addEventListener('click', async ()=> {
         try{
             if(window.clearObjectStore){
                 try{await window.clearObjectStore(window.STORE_DEMANDA);} catch(e){}
                 try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e){}
                 try { await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS); } catch(e){}
-                try{await window.clearObjectStore(window.STORE_INFORMACION);} catch (e){}
+                
             }
             window.location.href= './index.html';
-        }catch(err){
-            console.error('Error al regresar/limpiar datos:', err); 
-            window.location.href = './index.html';
-        }
+        }catch(err){}
     })
  }
         
