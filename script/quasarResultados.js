@@ -302,6 +302,104 @@ document.addEventListener('DOMContentLoaded', async () => {
        10) PDF Y REGRESAR (igual que tu versión actual)
     ========================================================== */
 
-    // (Tu código actual de PDF y regresar se mantiene igual)
+   function expandContainerForPDF() {
+        const container = document.querySelector('.container');
+        if (!container) return;
+        container.dataset.originalHeight = container.style.height;
+        container.style.height = 'auto';
+    }
+        function restoreContainerAfterPDF() {
+            const container = document.querySelector('.container');
+            if (!container) return;
+            container.style.height = container.dataset.originalHeight || '';
+        }
+
+if (btnPDF) {
+    btnPDF.addEventListener('click', async () => {
+        btnPDF.style.display = 'none';
+        if (btnRegresar) btnRegresar.style.display = 'none';
+        try {
+            expandContainerForPDF();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'letter');
+            const content = document.querySelector('.container') || document.body;
+            const canvas = await html2canvas(content, { scale: 2, useCORS: true });
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const imgProps = doc.getImageProperties(imgData);
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const margin = 20;
+            const imgDisplayWidth = pdfWidth - 2 * margin;
+            const imgDisplayHeight = (imgProps.height * imgDisplayWidth) / imgProps.width;
+
+            let position = 40;
+            doc.setFontSize(20);
+            doc.text('QUASAR Monthly Report', pdfWidth / 2, 30, { align: 'center' });
+            doc.addImage(imgData, 'JPEG', margin, position, imgDisplayWidth, imgDisplayHeight);
+            doc.save(`QUASAR_Report_${mesActualNombre}_${new Date().toISOString().slice(0,10)}.pdf`);
+        } catch (e) {
+            console.error('Error generando PDF:', e);
+        } finally {
+            restoreContainerAfterPDF();
+            btnPDF.style.display = 'inline-block';
+            if (btnRegresar) btnRegresar.style.display = 'inline-block';
+        }
+    });
+
+}
+    
+// TOOLTIP para mostrar el mensaje emergente//
+function showTooltipQuasar(event){
+    let tooltip = document.getElementById('tooltipQuasar');
+    const SCCLink = document.getElementById('SCCLink;');
+
+    if(!tooltip){
+        tooltip = document.createElement('div');
+        tooltip.id = 'tooltipQuasar';
+        tooltip.classList.add('tooltipHtml2');
+        document.body.appendChild(tooltip);
+
+    } 
+    tooltip.innetHTML=`
+        <strong>Before you go...</strong><br>
+        Remember that the data will be deleted.<br>
+        <em>Do you want to continue?</em>
+    `;
+    tooltip.style.left = `${event.pageX + 15}px`;
+    tooltip.style.top = `${event.pageY + 15}px`;
+    tooltip.style.opacity = 1;
+
+    if (SCCLink) SCCLink.classList.add('highlight');
+}
+function hideTooltipQuasar(){
+    const tooltip = document.getElementById('tooltioQuasar');
+    const SCCLink = document.getElementById('SCCLink');
+
+    if(tooltip) tooltip.style.opacity = 0;
+    if (SCCLink) SCCLink.classList.remove('highlight');
+
+}
+ window.showTooltipQuasa = showTooltipQuasar ;
+ window.hideTooltipQuasar = hideTooltipQuasar;
+
+ // boton de regresar 
+ if(btnRegresar) {
+    btnRegresar.addEventListener('click', async ()=> {
+        try{
+            if(window.clearObjectStore){
+                try{await window.clearObjectStore(window.STORE_DEMANDA);} catch(e){}
+                try { await window.clearObjectStore(window.STORE_FORM_ADICIONAL); } catch(e){}
+                try { await window.clearObjectStore(window.STORE_QUASAR_DESPERDICIOS); } catch(e){}
+                try{await window.clearObjectStore(window.STORE_INFORMACION);} catch (e){}
+            }
+            window.location.href= './index.html';
+        }catch(err){
+            console.error('Error al regresar/limpiar datos:', err); 
+            window.location.href = './index.html';
+        }
+    })
+ }
+        
+    
+
 
 });
