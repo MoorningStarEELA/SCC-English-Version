@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameCh4 = fd.get("PctCh4").trim();
         const unitCh4 = fd.get("Chem4Unit").trim();
 
+        const unitMap= {"1": "g", "2": "Gal", "3": "Lb"}
+
         const data = {
             // químicos base
             Flux: parseFloat(fd.get('Flux')),
@@ -30,10 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
             chem4Pct: nameCh4 !== "" ? parseFloat(fd.get("Chem4Pct")) : null,
 
             // unidades
-            unitCh1: fd.get("Chem1Unit"),
-            unitCh2: fd.get("Chem2Unit"),
-            unitCh3: fd.get("Chem3Unit"),
-            unitCh4: nameCh4 !== "" ? unitCh4 : null,
+             unitCh1: unitMap[fd.get("Chem1Unit")],
+             unitCh2: unitMap[fd.get("Chem2Unit")],
+             unitCh3: unitMap[fd.get("Chem3Unit")],
+             unitCh4: nameCh4 !== "" ? unitMap[unitCh4] : null,
 
             timestamp: new Date().toISOString()
         };

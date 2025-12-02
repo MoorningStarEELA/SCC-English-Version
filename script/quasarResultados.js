@@ -1,17 +1,9 @@
-// ================== QUASAR RESULTADOS — VERSIÓN FINAL ==================
 document.addEventListener('DOMContentLoaded', async () => {
-
-    /* ==========================================================
-       0) BOTONES NECESARIOS
-    ========================================================== */
-
     const btnPDF = document.getElementById('generarPDF');
     const btnRegresar = document.getElementById('regresarBtn');
-
     /* ==========================================================
        1) CAPTURAR ELEMENTOS DEL HTML
     ========================================================== */
-
     const elFluxData = document.getElementById('FluxData');
     const elWeldingData = document.getElementById('WeldingData');
 
@@ -48,10 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let chartInstance = null;
 
-    /* ==========================================================
-       2) UTILIDADES
-    ========================================================== */
-
+       //2) UTILIDADES
     function cleanNumber(n) {
         if (n === undefined || n === null) return 0;
         return parseFloat(String(n).replace(/,/g, '').trim()) || 0;
