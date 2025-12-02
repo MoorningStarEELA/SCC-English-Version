@@ -93,7 +93,7 @@ body {
 
 .righter {
   transform: translateX(50px) translateZ(-50%) rotateY(5deg);
-  background-image: url(./sources/seo_page_browser_web_window_view_icon_267280.png);
+  background-image: url(./sources/QuasarIcon.png);
 }
 
 .explainer {
